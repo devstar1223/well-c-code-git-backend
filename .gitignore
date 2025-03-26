@@ -36,5 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-# 기존 .gitignore 맨 아래에 추가
+# 개인 설정
 src/main/resources/application.properties
+data/
