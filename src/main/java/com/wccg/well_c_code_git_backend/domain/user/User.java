@@ -54,7 +54,7 @@ public class User extends BaseEntity {
                 .githubId(githubId)
                 .name(name)
                 .profileImageUrl(profileImageUrl)
-                .introduce("")
+                .introduce(introduce)
                 .build();
     }
 }
