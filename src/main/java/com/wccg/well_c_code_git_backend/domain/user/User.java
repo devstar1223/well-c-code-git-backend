@@ -5,6 +5,7 @@ import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.WccgRepository;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,4 +40,21 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WccgRepository> wccgRepositories = new ArrayList<>();
+
+    @Builder
+    private User(String githubId, String name, String introduce, String profileImageUrl) {
+        this.githubId = githubId;
+        this.name = name;
+        this.introduce = introduce;
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public static User of(String githubId, String name, String introduce, String profileImageUrl){
+        return User.builder()
+                .githubId(githubId)
+                .name(name)
+                .profileImageUrl(profileImageUrl)
+                .introduce("")
+                .build();
+    }
 }
