@@ -1,0 +1,65 @@
+package com.wccg.well_c_code_git_backend.domain.wccgrepository;
+
+import com.wccg.well_c_code_git_backend.domain.user.User;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class WccgRepository {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+
+    @Column(name = "owner", nullable = false, length = 39)
+    private String owner;
+
+    @Column(name = "description", length = 100)
+    private String description;
+
+    @Column(name = "github_created_at", nullable = false)
+    private LocalDateTime githubCreatedAt;
+
+    @Column(name = "github_updated_at", nullable = false)
+    private LocalDateTime githubUpdatedAt;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    //TODO : commit 테이블 연관관계 설정
+
+    @Builder
+    private WccgRepository(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isActive) {
+        this.name = name;
+        this.owner = owner;
+        this.description = description;
+        this.githubCreatedAt = githubCreatedAt;
+        this.githubUpdatedAt = githubUpdatedAt;
+        this.isActive = isActive;
+    }
+
+    public static WccgRepository of(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isActive){
+        return WccgRepository.builder()
+                .name(name)
+                .owner(owner)
+                .description(description)
+                .githubCreatedAt(githubCreatedAt)
+                .githubUpdatedAt(githubUpdatedAt)
+                .isActive(isActive)
+                .build();
+    }
+}
