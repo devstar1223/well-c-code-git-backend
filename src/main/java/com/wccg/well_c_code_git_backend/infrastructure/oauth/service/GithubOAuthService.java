@@ -1,7 +1,7 @@
-package com.wccg.well_c_code_git_backend.domain.oauth.service;
+package com.wccg.well_c_code_git_backend.infrastructure.oauth.service;
 
-import com.wccg.well_c_code_git_backend.domain.oauth.GithubOAuthProperties;
-import com.wccg.well_c_code_git_backend.domain.oauth.dto.GithubLoginUrlResponse;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
