@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,5 +22,13 @@ public class GithubOAuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(githubOAuthService.generateLoginUrl());
+    }
+
+    @GetMapping("/callback/github")
+    public ResponseEntity<String> githubCallback(@RequestParam("code") String code) {
+        githubOAuthService.processGithubCallback(code);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Github 로그인에 성공 했습니다.");
     }
 }
