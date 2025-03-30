@@ -14,7 +14,7 @@ public class GithubApiClient {
 
     private final GithubOAuthProperties githubOAuthProperties;
 
-    public String requestAccessToken(String code) {
+    public GithubAccessTokenResponse requestAccessToken(String code) {
         return WebClient.create()
                 .post()
                 .uri("https://github.com/login/oauth/access_token")
@@ -27,8 +27,7 @@ public class GithubApiClient {
                 ))
                 .retrieve()
                 .bodyToMono(GithubAccessTokenResponse.class)
-                .block()
-                .getAccessToken();
+                .block();
     }
 
     public GithubUserResponse requestUserInfo(String accessToken) {

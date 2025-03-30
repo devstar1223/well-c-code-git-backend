@@ -11,4 +11,9 @@ public class GithubAccessTokenResponse {
 
     @JsonProperty("access_token")
     private final String accessToken;
+
+    @JsonProperty("token_type")
+    private final String tokenType;
+
+    private final String scope;
 }

@@ -8,6 +8,7 @@ import com.wccg.well_c_code_git_backend.domain.user.UserRepository;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubAccessTokenResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,8 @@ public class GithubOAuthService {
     }
 
     public void processGithubCallback(String code) {
-        String accessToken = githubApiClient.requestAccessToken(code);
+        GithubAccessTokenResponse tokenResponse = githubApiClient.requestAccessToken(code);
+        String accessToken = tokenResponse.getAccessToken();
 
         GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
 
