@@ -2,8 +2,10 @@ package com.wccg.well_c_code_git_backend.infrastructure.oauth.service;
 
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenRepository;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserRepository;
+import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
@@ -19,6 +21,8 @@ public class GithubOAuthService {
     private final UserRepository userRepository;
     private final AccessTokenRepository accessTokenRepository;
     private final GithubApiClient githubApiClient;
+    private final UserService userService;
+    private final AccessTokenService accessTokenService;
 
     public GithubLoginUrlResponse generateLoginUrl() {
         String githubAuthorizeUrl = createGithubAuthorizeUrl();
@@ -49,8 +53,6 @@ public class GithubOAuthService {
                 true
         ));
 
-        AccessToken token = AccessToken.of(accessToken, true);
-        token.setUser(savedUser);
-        accessTokenRepository.save(token);
+        accessTokenService.saveWithUser(accessToken,savedUser);
     }
 }
