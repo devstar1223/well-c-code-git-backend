@@ -1,9 +1,7 @@
 package com.wccg.well_c_code_git_backend.infrastructure.oauth.service;
 
-import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenRepository;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.domain.user.UserRepository;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
@@ -19,8 +17,6 @@ import org.springframework.stereotype.Service;
 public class GithubOAuthService {
 
     private final GithubOAuthProperties githubOAuthProperties;
-    private final UserRepository userRepository;
-    private final AccessTokenRepository accessTokenRepository;
     private final GithubApiClient githubApiClient;
     private final UserService userService;
     private final AccessTokenService accessTokenService;
@@ -48,14 +44,7 @@ public class GithubOAuthService {
         GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
         UserSaveRequest userSaveRequest = toUserSaveRequest(githubUserResponse);
 
-        User savedUser = userRepository.save(User.of(
-                githubUserResponse.getId(),
-                githubUserResponse.getLogin(),
-                githubUserResponse.getName(),
-                githubUserResponse.getBio(),
-                githubUserResponse.getAvatarUrl(),
-                true
-        ));
+        User savedUser = userService.save(userSaveRequest);
 
         accessTokenService.saveWithUser(accessToken, savedUser);
     }
