@@ -3,17 +3,24 @@ package com.wccg.well_c_code_git_backend.infrastructure.oauth.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@RequiredArgsConstructor(onConstructor_ = @JsonCreator)
+@ToString
 public class GithubAccessTokenResponse {
 
-    @JsonProperty("access_token")
     private final String accessToken;
-
-    @JsonProperty("token_type")
     private final String tokenType;
-
     private final String scope;
+
+    @JsonCreator
+    public GithubAccessTokenResponse(
+            @JsonProperty("access_token") String accessToken,
+            @JsonProperty("token_type") String tokenType,
+            @JsonProperty("scope") String scope
+    ) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
+        this.scope = scope;
+    }
 }
