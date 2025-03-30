@@ -5,10 +5,7 @@ import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubAccessTokenResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.UserSaveRequest;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +35,17 @@ public class GithubOAuthService {
     }
 
     public void processGithubCallback(String code) {
-        GithubAccessTokenResponse tokenResponse = githubApiClient.requestAccessToken(code);
-        String accessToken = tokenResponse.getAccessToken();
+        GithubAccessTokenResponse githubAccessTokenResponse = githubApiClient.requestAccessToken(code);
+        String accessToken = githubAccessTokenResponse.getAccessToken();
 
         GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
         UserSaveRequest userSaveRequest = toUserSaveRequest(githubUserResponse);
 
         User savedUser = userService.save(userSaveRequest);
 
-        accessTokenService.saveWithUser(accessToken, savedUser);
+        AccessTokenSaveRequest accessTokenSaveRequest = toAccessTokenSaveRequest(githubAccessTokenResponse,savedUser);
+
+        accessTokenService.save(accessTokenSaveRequest);
     }
 
     private UserSaveRequest toUserSaveRequest(GithubUserResponse response) {
@@ -56,6 +55,14 @@ public class GithubOAuthService {
                 response.getName(),
                 response.getBio(),
                 response.getAvatarUrl(),
+                true
+        );
+    }
+
+    private AccessTokenSaveRequest toAccessTokenSaveRequest(GithubAccessTokenResponse response, User user){
+        return new AccessTokenSaveRequest(
+                response.getAccessToken(),
+                user,
                 true
         );
     }
