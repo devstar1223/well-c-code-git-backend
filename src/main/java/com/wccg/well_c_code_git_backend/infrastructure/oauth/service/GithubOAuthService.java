@@ -1,7 +1,9 @@
 package com.wccg.well_c_code_git_backend.infrastructure.oauth.service;
 
+import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
+import com.wccg.well_c_code_git_backend.domain.user.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;

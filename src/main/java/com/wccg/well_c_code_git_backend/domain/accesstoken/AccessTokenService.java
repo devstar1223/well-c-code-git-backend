@@ -1,7 +1,5 @@
 package com.wccg.well_c_code_git_backend.domain.accesstoken;
 
-import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.AccessTokenSaveRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
