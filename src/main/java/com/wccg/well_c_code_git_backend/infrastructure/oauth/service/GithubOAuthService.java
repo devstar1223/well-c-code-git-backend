@@ -1,6 +1,5 @@
 package com.wccg.well_c_code_git_backend.infrastructure.oauth.service;
 
-import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenRepository;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
@@ -48,6 +47,7 @@ public class GithubOAuthService {
         GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
 
         User savedUser = userRepository.save(User.of(
+                githubUserResponse.getId(),
                 githubUserResponse.getLogin(),
                 githubUserResponse.getName(),
                 githubUserResponse.getBio(),
@@ -55,6 +55,6 @@ public class GithubOAuthService {
                 true
         ));
 
-        accessTokenService.saveWithUser(accessToken,savedUser);
+        accessTokenService.saveWithUser(accessToken, savedUser);
     }
 }
