@@ -22,8 +22,11 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "github_id", nullable = false, length = 39)
-    private String githubId;
+    @Column(name = "github_id", nullable = false)
+    private Long githubId;
+
+    @Column(name = "github_login_id", nullable = false, length = 39)
+    private String githubLoginId;
 
     @Column(name = "name", nullable = false, length = 39)
     private String name;
@@ -45,17 +48,19 @@ public class User extends BaseEntity {
     private List<WccgRepository> wccgRepositories = new ArrayList<>();
 
     @Builder
-    private User(String githubId, String name, String introduce, String profileImageUrl, boolean isActive) {
+    private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, boolean isActive) {
         this.githubId = githubId;
+        this.githubLoginId = githubLoginId;
         this.name = name;
         this.introduce = introduce;
         this.profileImageUrl = profileImageUrl;
         this.isActive = isActive;
     }
 
-    public static User of(String githubId, String name, String introduce, String profileImageUrl, boolean isActive){
+    public static User of(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, boolean isActive){
         return User.builder()
                 .githubId(githubId)
+                .githubLoginId(githubLoginId)
                 .name(name)
                 .introduce(introduce)
                 .profileImageUrl(profileImageUrl)
