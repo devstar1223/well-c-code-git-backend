@@ -10,6 +10,7 @@ import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperti
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubAccessTokenResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserResponse;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.UserSaveRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class GithubOAuthService {
         String accessToken = tokenResponse.getAccessToken();
 
         GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
+        UserSaveRequest userSaveRequest = toUserSaveRequest(githubUserResponse);
 
         User savedUser = userRepository.save(User.of(
                 githubUserResponse.getId(),
@@ -56,5 +58,16 @@ public class GithubOAuthService {
         ));
 
         accessTokenService.saveWithUser(accessToken, savedUser);
+    }
+
+    private UserSaveRequest toUserSaveRequest(GithubUserResponse response) {
+        return new UserSaveRequest(
+                response.getId(),
+                response.getLogin(),
+                response.getName(),
+                response.getBio(),
+                response.getAvatarUrl(),
+                true
+        );
     }
 }
