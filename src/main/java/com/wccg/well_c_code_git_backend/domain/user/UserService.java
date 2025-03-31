@@ -3,6 +3,8 @@ package com.wccg.well_c_code_git_backend.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -20,5 +22,9 @@ public class UserService {
         );
 
         return userRepository.save(user);
+    }
+
+    public Optional<User> getUserByGithubId(Long githubId){
+        return userRepository.findByGithubId(githubId);
     }
 }
