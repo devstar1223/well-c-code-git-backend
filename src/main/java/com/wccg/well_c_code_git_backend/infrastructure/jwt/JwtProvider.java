@@ -2,6 +2,7 @@ package com.wccg.well_c_code_git_backend.infrastructure.jwt;
 
 import com.wccg.well_c_code_git_backend.domain.user.UserRole;
 import io.jsonwebtoken.*;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.security.Key;
@@ -11,10 +12,13 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
 
+    private final JwtProperties jwtProperties;
+
     private Key secretKey;
     private long jwtAccessTokenValidityInMillis;
 
-    public JwtProvider(JwtProperties jwtProperties) {
+    @PostConstruct
+    public void init() {
         this.secretKey = jwtProperties.getSecretKey();
         this.jwtAccessTokenValidityInMillis = jwtProperties.getJwtAccessTokenValidityInMillis();
     }
