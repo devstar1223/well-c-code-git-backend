@@ -22,7 +22,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "github_id", nullable = false)
+    @Column(name = "github_id", nullable = false, unique = true)
     private Long githubId;
 
     @Column(name = "github_login_id", nullable = false, length = 39)
