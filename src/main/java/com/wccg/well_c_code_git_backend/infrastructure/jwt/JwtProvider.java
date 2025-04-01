@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.infrastructure.jwt;
 
+import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserRole;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
@@ -23,12 +24,12 @@ public class JwtProvider {
         this.jwtAccessTokenValidityInMillis = jwtProperties.getJwtAccessTokenValidityInMillis();
     }
 
-    public String createToken(Long userId) {
+    public String createToken(User user) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtAccessTokenValidityInMillis);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userId)) // 유저 ID를 subject에 저장
+                .setSubject(String.valueOf(user.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .claim("role", UserRole.USER)

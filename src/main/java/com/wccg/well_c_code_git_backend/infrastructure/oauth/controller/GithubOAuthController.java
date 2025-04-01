@@ -1,5 +1,8 @@
 package com.wccg.well_c_code_git_backend.infrastructure.oauth.controller;
 
+import com.wccg.well_c_code_git_backend.domain.user.User;
+import com.wccg.well_c_code_git_backend.infrastructure.jwt.JwtProvider;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.LoginResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.service.GithubOAuthService;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GithubOAuthController {
 
     private final GithubOAuthService githubOAuthService;
+    private final JwtProvider jwtProvider;
 
     @GetMapping("/login/github")
     public ResponseEntity<GithubLoginUrlResponse> getGithubLoginUrl() {
@@ -25,10 +29,10 @@ public class GithubOAuthController {
     }
 
     @GetMapping("/callback/github")
-    public ResponseEntity<String> githubCallback(@RequestParam("code") String code) {
-        githubOAuthService.processGithubCallback(code);
+    public ResponseEntity<LoginResponse> githubCallback(@RequestParam("code") String code) {
+        LoginResponse loginResponse = githubOAuthService.processGithubCallback(code);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("Github 로그인에 성공 했습니다.");
+                .body(loginResponse);
     }
 }

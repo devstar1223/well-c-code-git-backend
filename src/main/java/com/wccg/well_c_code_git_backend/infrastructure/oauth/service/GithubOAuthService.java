@@ -5,11 +5,13 @@ import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
+import com.wccg.well_c_code_git_backend.infrastructure.jwt.JwtProvider;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubAccessTokenResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserResponse;
+import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +23,37 @@ public class GithubOAuthService {
     private final GithubApiClient githubApiClient;
     private final UserService userService;
     private final AccessTokenService accessTokenService;
+    private final JwtProvider jwtProvider;
 
     public GithubLoginUrlResponse generateLoginUrl() {
         String githubAuthorizeUrl = createGithubAuthorizeUrl();
         return new GithubLoginUrlResponse(githubAuthorizeUrl);
     }
 
-    public void processGithubCallback(String code) {
-        GithubAccessTokenResponse githubAccessTokenResponse = githubApiClient.requestAccessToken(code);
-        String accessToken = githubAccessTokenResponse.getAccessToken();
+    public LoginResponse processGithubCallback(String code) {
+        GithubAccessTokenResponse tokenResponse = githubApiClient.requestAccessToken(code);
+        String accessToken = tokenResponse.getAccessToken();
 
-        GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
+        GithubUserResponse githubUser = githubApiClient.requestUserInfo(accessToken);
 
-        userService.getUserByGithubId(githubUserResponse.getId())
-                .ifPresentOrElse(
-                        existingUser -> handleExistingUser(existingUser, githubAccessTokenResponse),
-                        () -> handleNewUser(githubUserResponse, githubAccessTokenResponse)
-                );
+        User user = getOrRegisterUserWithSaveToken(githubUser, tokenResponse);
+
+        String jwt = jwtProvider.createToken(user);
+        return new LoginResponse(jwt, user);
+    }
+
+    private User getOrRegisterUserWithSaveToken(GithubUserResponse githubUser, GithubAccessTokenResponse tokenResponse) {
+        return userService.getUserByGithubId(githubUser.getId())
+                .map(existingUser -> {
+                    accessTokenService.deactivatePreviousTokens(existingUser);
+                    saveAccessToken(tokenResponse, existingUser);
+                    return existingUser;
+                })
+                .orElseGet(() -> {
+                    User newUser = saveUser(githubUser);
+                    saveAccessToken(tokenResponse, newUser);
+                    return newUser;
+                });
     }
 
     private String createGithubAuthorizeUrl() {
@@ -49,16 +65,6 @@ public class GithubOAuthService {
                 + "?client_id=" + clientId
                 + "&redirect_uri=" + redirectUri
                 + "&scope=" + scope;
-    }
-
-    private void handleExistingUser(User existingUser, GithubAccessTokenResponse githubAccessTokenResponse) {
-        accessTokenService.deactivatePreviousTokens(existingUser);
-        saveAccessToken(githubAccessTokenResponse, existingUser);
-    }
-
-    private void handleNewUser(GithubUserResponse githubUserResponse, GithubAccessTokenResponse githubAccessTokenResponse) {
-        User savedUser = saveUser(githubUserResponse);
-        saveAccessToken(githubAccessTokenResponse, savedUser);
     }
 
     private User saveUser(GithubUserResponse githubUserResponse) {
