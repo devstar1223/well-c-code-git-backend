@@ -13,8 +13,6 @@ import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserRespo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class GithubOAuthService {
@@ -29,6 +27,19 @@ public class GithubOAuthService {
         return new GithubLoginUrlResponse(githubAuthorizeUrl);
     }
 
+    public void processGithubCallback(String code) {
+        GithubAccessTokenResponse githubAccessTokenResponse = githubApiClient.requestAccessToken(code);
+        String accessToken = githubAccessTokenResponse.getAccessToken();
+
+        GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
+
+        userService.getUserByGithubId(githubUserResponse.getId())
+                .ifPresentOrElse(
+                        existingUser -> handleExistingUser(existingUser, githubAccessTokenResponse),
+                        () -> handleNewUser(githubUserResponse, githubAccessTokenResponse)
+                );
+    }
+
     private String createGithubAuthorizeUrl() {
         String clientId = githubOAuthProperties.getClientId();
         String redirectUri = githubOAuthProperties.getRedirectUri();
@@ -40,26 +51,19 @@ public class GithubOAuthService {
                 + "&scope=" + scope;
     }
 
-    public void processGithubCallback(String code) {
-        GithubAccessTokenResponse githubAccessTokenResponse = githubApiClient.requestAccessToken(code);
-        String accessToken = githubAccessTokenResponse.getAccessToken();
+    private void handleExistingUser(User existingUser, GithubAccessTokenResponse githubAccessTokenResponse) {
+        accessTokenService.deactivatePreviousTokens(existingUser);
+        saveAccessToken(githubAccessTokenResponse, existingUser);
+    }
 
-        GithubUserResponse githubUserResponse = githubApiClient.requestUserInfo(accessToken);
+    private void handleNewUser(GithubUserResponse githubUserResponse, GithubAccessTokenResponse githubAccessTokenResponse) {
+        User savedUser = saveUser(githubUserResponse);
+        saveAccessToken(githubAccessTokenResponse, savedUser);
+    }
 
-        Optional<User> optionalUser = userService.getUserByGithubId(githubUserResponse.getId());
-
-        if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
-            accessTokenService.deactivatePreviousTokens(existingUser);
-            AccessTokenSaveRequest accessTokenSaveRequest = toAccessTokenSaveRequest(githubAccessTokenResponse, existingUser);
-            accessTokenService.save(accessTokenSaveRequest);
-            return;
-        }
-
+    private User saveUser(GithubUserResponse githubUserResponse) {
         UserSaveRequest userSaveRequest = toUserSaveRequest(githubUserResponse);
-        User savedUser = userService.save(userSaveRequest);
-        AccessTokenSaveRequest accessTokenSaveRequest = toAccessTokenSaveRequest(githubAccessTokenResponse, savedUser);
-        accessTokenService.save(accessTokenSaveRequest);
+        return userService.save(userSaveRequest);
     }
 
     private UserSaveRequest toUserSaveRequest(GithubUserResponse response) {
@@ -71,6 +75,11 @@ public class GithubOAuthService {
                 response.getAvatarUrl(),
                 true
         );
+    }
+
+    private void saveAccessToken(GithubAccessTokenResponse githubAccessTokenResponse, User existingUser) {
+        AccessTokenSaveRequest accessTokenSaveRequest = toAccessTokenSaveRequest(githubAccessTokenResponse, existingUser);
+        accessTokenService.save(accessTokenSaveRequest);
     }
 
     private AccessTokenSaveRequest toAccessTokenSaveRequest(GithubAccessTokenResponse response, User user) {
