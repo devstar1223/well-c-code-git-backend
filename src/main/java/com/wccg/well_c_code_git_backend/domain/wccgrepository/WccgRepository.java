@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository;
 
+import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WccgRepository {
+public class WccgRepository extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +53,7 @@ public class WccgRepository {
         this.isActive = isActive;
     }
 
-    public static WccgRepository of(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isActive){
+    public static WccgRepository of(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isActive) {
         return WccgRepository.builder()
                 .name(name)
                 .owner(owner)

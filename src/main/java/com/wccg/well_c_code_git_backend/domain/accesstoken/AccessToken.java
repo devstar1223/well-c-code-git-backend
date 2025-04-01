@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.accesstoken;
 
+import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @Table(indexes = {
         @Index(columnList = "user_id, is_active")
 })
-public class AccessToken {
+public class AccessToken extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
