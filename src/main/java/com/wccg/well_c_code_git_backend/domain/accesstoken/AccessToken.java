@@ -7,6 +7,9 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(columnList = "user_id, is_active")
+})
 public class AccessToken {
 
     @Id
@@ -35,5 +38,9 @@ public class AccessToken {
                 .accessToken(accessToken)
                 .isActive(isActive)
                 .build();
+    }
+
+    public void deactivate() {
+        this.isActive = false;
     }
 }

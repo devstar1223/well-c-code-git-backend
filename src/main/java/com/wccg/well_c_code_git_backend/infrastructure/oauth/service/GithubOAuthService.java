@@ -49,8 +49,8 @@ public class GithubOAuthService {
         Optional<User> optionalUser = userService.getUserByGithubId(githubUserResponse.getId());
 
         if (optionalUser.isPresent()) {
-            //TODO.유저의 기존 토큰 비활성화
             User existingUser = optionalUser.get();
+            accessTokenService.deactivatePreviousTokens(existingUser);
             AccessTokenSaveRequest accessTokenSaveRequest = toAccessTokenSaveRequest(githubAccessTokenResponse, existingUser);
             accessTokenService.save(accessTokenSaveRequest);
             return;
