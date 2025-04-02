@@ -1,10 +1,9 @@
-package com.wccg.well_c_code_git_backend.infrastructure.oauth.controller;
+package com.wccg.well_c_code_git_backend.global.security.oauth.controller;
 
-import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.infrastructure.jwt.JwtProvider;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.LoginResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.service.GithubOAuthService;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
+import com.wccg.well_c_code_git_backend.global.security.jwt.JwtProvider;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.service.GithubOAuthService;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.infrastructure.jwt;
+package com.wccg.well_c_code_git_backend.global.security.jwt;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;

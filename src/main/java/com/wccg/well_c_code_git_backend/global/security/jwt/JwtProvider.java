@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.infrastructure.jwt;
+package com.wccg.well_c_code_git_backend.global.security.jwt;
 
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserRole;

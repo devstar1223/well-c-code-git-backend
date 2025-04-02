@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.infrastructure.oauth.dto;
+package com.wccg.well_c_code_git_backend.global.security.oauth.dto;
 
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import lombok.Getter;

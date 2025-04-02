@@ -1,17 +1,17 @@
-package com.wccg.well_c_code_git_backend.infrastructure.oauth.service;
+package com.wccg.well_c_code_git_backend.global.security.oauth.service;
 
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
-import com.wccg.well_c_code_git_backend.infrastructure.jwt.JwtProvider;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubApiClient;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.GithubOAuthProperties;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubAccessTokenResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubLoginUrlResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.LoginResponse;
+import com.wccg.well_c_code_git_backend.global.security.jwt.JwtProvider;
+import com.wccg.well_c_code_git_backend.global.security.oauth.GithubApiClient;
+import com.wccg.well_c_code_git_backend.global.security.oauth.GithubOAuthProperties;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubAccessTokenResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubUserResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

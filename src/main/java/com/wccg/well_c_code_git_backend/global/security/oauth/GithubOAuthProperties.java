@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.infrastructure.oauth;
+package com.wccg.well_c_code_git_backend.global.security.oauth;
 
 import lombok.Getter;
 import lombok.Setter;

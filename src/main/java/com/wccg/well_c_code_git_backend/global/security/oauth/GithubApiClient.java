@@ -1,7 +1,7 @@
-package com.wccg.well_c_code_git_backend.infrastructure.oauth;
+package com.wccg.well_c_code_git_backend.global.security.oauth;
 
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubAccessTokenResponse;
-import com.wccg.well_c_code_git_backend.infrastructure.oauth.dto.GithubUserResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubAccessTokenResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

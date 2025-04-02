@@ -1,8 +1,8 @@
 package com.wccg.well_c_code_git_backend.config;
 
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
-import com.wccg.well_c_code_git_backend.infrastructure.jwt.JwtAuthenticationFilter;
-import com.wccg.well_c_code_git_backend.infrastructure.jwt.JwtProvider;
+import com.wccg.well_c_code_git_backend.global.security.jwt.JwtAuthenticationFilter;
+import com.wccg.well_c_code_git_backend.global.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
