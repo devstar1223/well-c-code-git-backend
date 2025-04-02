@@ -27,4 +27,8 @@ public class UserService {
     public Optional<User> getUserByGithubId(Long githubId){
         return userRepository.findByGithubId(githubId);
     }
+
+    public Optional<User> getUserById(Long id){
+        return userRepository.findById(id);
+    }
 }
