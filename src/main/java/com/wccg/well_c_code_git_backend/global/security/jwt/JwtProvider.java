@@ -32,7 +32,7 @@ public class JwtProvider {
                 .setSubject(String.valueOf(user.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .claim("role", UserRole.USER)
+                .claim("role", user.getUserRole())
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -58,5 +58,15 @@ public class JwtProvider {
                         .getBody()
                         .getSubject()
         );
+    }
+
+    public UserRole getUserRole(String token) {
+        String role = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
+        return UserRole.valueOf(role);
     }
 }
