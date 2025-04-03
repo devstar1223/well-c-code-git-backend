@@ -3,6 +3,7 @@ package com.wccg.well_c_code_git_backend.global.security.oauth.service;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
+import com.wccg.well_c_code_git_backend.domain.user.UserRole;
 import com.wccg.well_c_code_git_backend.domain.user.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.global.security.jwt.JwtProvider;
@@ -79,6 +80,7 @@ public class GithubOAuthService {
                 response.getName(),
                 response.getBio(),
                 response.getAvatarUrl(),
+                UserRole.USER,
                 true
         );
     }

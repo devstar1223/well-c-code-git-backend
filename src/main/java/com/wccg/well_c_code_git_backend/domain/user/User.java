@@ -37,6 +37,10 @@ public class User extends BaseEntity {
     @Column(name = "profile_image_url", nullable = false, length = 200)
     private String profileImageUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false, length = 20)
+    private UserRole userRole;
+
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
@@ -48,22 +52,24 @@ public class User extends BaseEntity {
     private List<WccgRepository> wccgRepositories = new ArrayList<>();
 
     @Builder
-    private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, boolean isActive) {
+    private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
         this.githubId = githubId;
         this.githubLoginId = githubLoginId;
         this.name = name;
         this.introduce = introduce;
         this.profileImageUrl = profileImageUrl;
+        this.userRole = userRole;
         this.isActive = isActive;
     }
 
-    public static User of(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, boolean isActive){
+    public static User of(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive){
         return User.builder()
                 .githubId(githubId)
                 .githubLoginId(githubLoginId)
                 .name(name)
                 .introduce(introduce)
                 .profileImageUrl(profileImageUrl)
+                .userRole(userRole)
                 .isActive(isActive)
                 .build();
     }

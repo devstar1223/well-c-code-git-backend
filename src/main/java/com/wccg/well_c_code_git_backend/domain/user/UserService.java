@@ -18,6 +18,7 @@ public class UserService {
                 request.getName(),
                 request.getIntroduce(),
                 request.getProfileImageUrl(),
+                request.getUserRole(),
                 request.isActive()
         );
 

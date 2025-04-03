@@ -11,5 +11,6 @@ public class UserSaveRequest {
     private final String name;
     private final String introduce;
     private final String profileImageUrl;
+    private final UserRole userRole;
     private final boolean isActive;
 }
