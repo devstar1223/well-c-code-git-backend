@@ -33,28 +33,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws IOException {
         try {
+
+            String requestURI = request.getRequestURI();
+
+            //TODO. 리팩토링(임시구현)
+            if (requestURI.startsWith("/api/oauth")
+                    || requestURI.startsWith("/api/test/e1")
+                    || requestURI.startsWith("/h2-console")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String authHeader = request.getHeader("Authorization");
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String jwt = authHeader.substring(7);
-
-                if (!jwtProvider.validateToken(jwt)) {
-                    throw new BadCredentialsException("유효하지 않은 토큰입니다.");
-                }
-
-                Long userId = jwtProvider.getUserId(jwt);
-                User user = userService.getUserById(userId)
-                        .orElseThrow(() -> new UsernameNotFoundException("해당 id를 가진 이용자가 없습니다."));
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                user,
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()))
-                        );
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                throw new BadCredentialsException("Authorization 헤더가 없거나 올바르지 않습니다.");
             }
+
+            String jwt = authHeader.substring(7);
+
+            if (!jwtProvider.validateToken(jwt)) {
+                throw new BadCredentialsException("유효하지 않은 토큰입니다.");
+            }
+
+            Long userId = jwtProvider.getUserId(jwt);
+            User user = userService.getUserById(userId)
+                    .orElseThrow(() -> new UsernameNotFoundException("해당 id를 가진 이용자가 없습니다."));
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()))
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
 
