@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.global.security.oauth.dto;
+package com.wccg.well_c_code_git_backend.global.github.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

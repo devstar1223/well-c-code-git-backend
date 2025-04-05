@@ -6,12 +6,13 @@ import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserRole;
 import com.wccg.well_c_code_git_backend.domain.user.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
+import com.wccg.well_c_code_git_backend.global.github.client.GithubOauthClient;
+import com.wccg.well_c_code_git_backend.global.github.client.GithubUserClient;
 import com.wccg.well_c_code_git_backend.global.security.jwt.JwtProvider;
-import com.wccg.well_c_code_git_backend.global.security.oauth.GithubApiClient;
 import com.wccg.well_c_code_git_backend.global.security.oauth.GithubOAuthProperties;
-import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubAccessTokenResponse;
+import com.wccg.well_c_code_git_backend.global.github.dto.GithubAccessTokenResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
-import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubUserResponse;
+import com.wccg.well_c_code_git_backend.global.github.dto.GithubUserResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ import org.springframework.stereotype.Service;
 public class GithubOAuthService {
 
     private final GithubOAuthProperties githubOAuthProperties;
-    private final GithubApiClient githubApiClient;
+    private final GithubOauthClient githubOauthClient;
+    private final GithubUserClient githubUserClient;
     private final UserService userService;
     private final AccessTokenService accessTokenService;
     private final JwtProvider jwtProvider;
@@ -32,10 +34,10 @@ public class GithubOAuthService {
     }
 
     public LoginResponse processGithubCallback(String code) {
-        GithubAccessTokenResponse tokenResponse = githubApiClient.requestAccessToken(code);
+        GithubAccessTokenResponse tokenResponse = githubOauthClient.requestAccessToken(code);
         String accessToken = tokenResponse.getAccessToken();
 
-        GithubUserResponse githubUser = githubApiClient.requestUserInfo(accessToken);
+        GithubUserResponse githubUser = githubUserClient.requestUserInfo(accessToken);
 
         User user = getOrRegisterUserWithSaveToken(githubUser, tokenResponse);
 
