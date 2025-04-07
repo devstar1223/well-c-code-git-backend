@@ -2,6 +2,7 @@ package com.wccg.well_c_code_git_backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -9,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
+    @Primary
     public WebClient githubApiWebClient() {
         return WebClient.builder()
                 .baseUrl("https://api.github.com")
