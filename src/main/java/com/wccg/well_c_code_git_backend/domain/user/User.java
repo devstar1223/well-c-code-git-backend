@@ -44,12 +44,11 @@ public class User extends BaseEntity {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
-    // 연관관계: 유저는 여러 리포지토리, 토큰을 가질 수 있음
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AccessToken> accessTokens = new ArrayList<>();
+    private final List<AccessToken> accessTokens = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WccgRepository> wccgRepositories = new ArrayList<>();
+    private final List<WccgRepository> wccgRepositories = new ArrayList<>();
 
     @Builder
     private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
@@ -72,5 +71,15 @@ public class User extends BaseEntity {
                 .userRole(userRole)
                 .isActive(isActive)
                 .build();
+    }
+
+    public void addAccessToken(AccessToken accessToken) {
+        accessTokens.add(accessToken);
+        accessToken.setUser(this);
+    }
+
+    public void addRepository(WccgRepository repository) {
+        wccgRepositories.add(repository);
+        repository.setUser(this);
     }
 }
