@@ -5,6 +5,7 @@ import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.WccgRepositoryServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.WccgRepositorySyncRequest;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.WccgRepositorySyncResponse;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserMismatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class WccgRepositoryController {
     public ResponseEntity<WccgRepositorySyncResponse> sync(@AuthenticationPrincipal User user,
                                                            @RequestBody WccgRepositorySyncRequest request) {
         if (!Objects.equals(user.getId(), request.getUserId())) {
-            throw new RuntimeException("본인의 요청만 가능합니다.");
+            throw new UserMismatchException();
         }
 
         WccgRepositoryServiceSyncResponse ServiceResponse = wccgRepositoryService.syncRepositoryFrom(request.getUserId(),user);
