@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,19 +18,19 @@ public class AccessTokenService {
                 accessTokenSaveRequest.getAccessToken(),
                 accessTokenSaveRequest.isActive()
         );
-        accessToken.setUser(accessTokenSaveRequest.getUser());
+        accessTokenSaveRequest.getUser().addAccessToken(accessToken);
         accessTokenRepository.save(accessToken);
     }
 
-    public void deactivatePreviousTokens(User user){
+    public void deactivatePreviousTokens(User user) {
         List<AccessToken> activeTokens = accessTokenRepository.findAllByUserAndIsActiveTrue(user);
 
-        for(AccessToken token : activeTokens){
+        for (AccessToken token : activeTokens) {
             token.deactivate();
         }
     }
 
-    public String getActiveAccessTokenByUserId(Long userId){
+    public String getActiveAccessTokenByUserId(Long userId) {
         AccessToken accessToken = accessTokenRepository
                 .findByUserIdAndIsActiveTrue(userId)
                 .orElseThrow(AccessTokenNotFoundException::new);
