@@ -40,15 +40,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/oauth/**",
-                                "/api/test/e1",
+                                "/api/**",
+                                "/test/**",
                                 "/h2-console/**"
                         ).permitAll()
 
                         .requestMatchers(
-                                "/api/test/e2",
-                                "/api/test/e3",
-                                "/api/test/e4",
                                 "/tobe/**"
                         ).authenticated()
 
