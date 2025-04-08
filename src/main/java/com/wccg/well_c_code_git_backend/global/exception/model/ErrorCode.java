@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "E001", "해당 유저를 찾을 수 없습니다."),
+    ACCESS_TOKEN_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "E002", "해당 유저의 활성화된 액세스 토큰이 없습니다."),
     FOR_TEST_ERROR(HttpStatus.BAD_REQUEST, "E777", "테스트용 에러 코드");
+
 
     private final HttpStatus status;
     private final String code;
