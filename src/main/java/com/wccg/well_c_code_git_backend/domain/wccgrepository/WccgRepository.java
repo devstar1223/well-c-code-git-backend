@@ -32,7 +32,10 @@ public class WccgRepository extends BaseEntity {
     private LocalDateTime githubUpdatedAt;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private boolean isActive;
+
+    @Column(name = "is_forked", nullable = false)
+    private boolean isForked;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,16 +45,17 @@ public class WccgRepository extends BaseEntity {
     //TODO : commit 테이블 연관관계 설정
 
     @Builder
-    private WccgRepository(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isActive) {
+    private WccgRepository(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isForked, boolean isActive) {
         this.name = name;
         this.owner = owner;
         this.description = description;
         this.githubCreatedAt = githubCreatedAt;
         this.githubUpdatedAt = githubUpdatedAt;
+        this.isForked = isForked;
         this.isActive = isActive;
     }
 
-    public static WccgRepository of(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isActive) {
+    public static WccgRepository of(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isForked, boolean isActive) {
         return WccgRepository.builder()
                 .name(name)
                 .owner(owner)
@@ -59,6 +63,7 @@ public class WccgRepository extends BaseEntity {
                 .githubCreatedAt(githubCreatedAt)
                 .githubUpdatedAt(githubUpdatedAt)
                 .isActive(isActive)
+                .isForked(isForked)
                 .build();
     }
 }

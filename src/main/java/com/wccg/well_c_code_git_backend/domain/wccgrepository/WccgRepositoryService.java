@@ -33,6 +33,7 @@ public class WccgRepositoryService {
                     response.getDescription(),
                     response.getCreatedAt().toLocalDateTime(),
                     response.getUpdatedAt().toLocalDateTime(),
+                    response.isFork(),
                     true
             );
             repo.setUser(user);
