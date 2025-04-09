@@ -51,7 +51,10 @@ public class WccgRepositoryService {
                             response.getCreatedAt().toLocalDateTime(),
                             response.getUpdatedAt().toLocalDateTime(),
                             response.isFork(),
-                            true);
+                            response.getStargazersCount(),
+                            response.getLanguage(),
+                            true
+                    );
                     user.addRepository(repo);
                     return repo;
                 })
