@@ -3,11 +3,13 @@ package com.wccg.well_c_code_git_backend.domain.wccgrepository;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
 import com.wccg.well_c_code_git_backend.domain.user.UserService;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.WccgRepositoryServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubRepositoryClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubRepositoryResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,4 +62,14 @@ public class WccgRepositoryService {
                 })
                 .toList();
     }
+
+    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(RepositorySortType sortType, SortDirection sortDirection) {
+        Sort.Direction direction = Sort.Direction.valueOf(sortDirection.name());
+        Sort sort = Sort.by(direction, sortType.getPropertyName());
+
+        List<WccgRepository> wccgRepositoryList = wccgRepositoryRepository.findAllByIsActiveTrue(sort);
+        return ServiceGetRepositoriesResponse.fromList(wccgRepositoryList);
+    }
+
+
 }

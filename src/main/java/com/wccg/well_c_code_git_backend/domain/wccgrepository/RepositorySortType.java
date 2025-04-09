@@ -1,16 +1,19 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository;
 
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.InvalidSortParameterException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+@Getter
 @RequiredArgsConstructor
 public enum RepositorySortType {
-    GITHUB_CREATED_AT("리포지토리 생성 일자 기준"),
-    GITHUB_UPDATED_AT("리포지토리 업데이트 일자 기준"),
-    STAR("리포지토리 스타 갯수 기준");
+    GITHUB_CREATED_AT("githubCreatedAt", "리포지토리 생성 일자 기준"),
+    GITHUB_UPDATED_AT("githubUpdatedAt", "리포지토리 업데이트 일자 기준"),
+    STAR("star", "리포지토리 스타 갯수 기준");
 
+    private final String propertyName;
     private final String description;
 
     public static RepositorySortType from(String input) {
