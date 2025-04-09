@@ -24,23 +24,27 @@ public class WccgRepositoryService {
         String accessToken = accessTokenService.getActiveAccessTokenByUserId(userId);
         List<GithubRepositoryResponse> githubRepositoryResponseList = githubRepositoryClient.getPublicRepositories(accessToken);
 
-        int count = 0;
+        List<WccgRepository> repos = toWccgRepositories(user, githubRepositoryResponseList);
 
-        for (GithubRepositoryResponse response : githubRepositoryResponseList) {
-            WccgRepository repo = WccgRepository.of(
-                    response.getName(),
-                    response.getOwner().getLogin(),
-                    response.getDescription(),
-                    response.getCreatedAt().toLocalDateTime(),
-                    response.getUpdatedAt().toLocalDateTime(),
-                    response.isFork(),
-                    true
-            );
-            repo.setUser(user);
-            wccgRepositoryRepository.save(repo);
-            count++;
-        }
+        wccgRepositoryRepository.saveAll(repos);
 
-        return new WccgRepositoryServiceSyncResponse(count);
+        return new WccgRepositoryServiceSyncResponse(repos.size());
+    }
+
+    private static List<WccgRepository> toWccgRepositories(User user, List<GithubRepositoryResponse> githubRepositoryResponseList) {
+        return githubRepositoryResponseList.stream()
+                .map(response -> {
+                    WccgRepository repo = WccgRepository.of(
+                            response.getName(),
+                            response.getOwner().getLogin(),
+                            response.getDescription(),
+                            response.getCreatedAt().toLocalDateTime(),
+                            response.getUpdatedAt().toLocalDateTime(),
+                            response.isFork(),
+                            true);
+                    repo.setUser(user);
+                    return repo;
+                })
+                .toList();
     }
 }
