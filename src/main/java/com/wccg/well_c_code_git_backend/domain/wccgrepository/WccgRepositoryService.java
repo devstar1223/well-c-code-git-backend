@@ -2,7 +2,9 @@ package com.wccg.well_c_code_git_backend.domain.wccgrepository;
 
 import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.User;
+import com.wccg.well_c_code_git_backend.domain.user.UserService;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.WccgRepositoryServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubRepositoryClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubRepositoryResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,13 @@ public class WccgRepositoryService {
     private final WccgRepositoryRepository wccgRepositoryRepository;
     private final GithubRepositoryClient githubRepositoryClient;
     private final AccessTokenService accessTokenService;
+    private final UserService userService;
 
     @Transactional
-    public WccgRepositoryServiceSyncResponse syncRepositoryFrom(Long userId, User user) {
+    public WccgRepositoryServiceSyncResponse syncRepositoryFrom(User userPrincipal) {
+        User user = getPersistentUser(userPrincipal);
 
-        String accessToken = accessTokenService.getActiveAccessTokenByUserId(userId);
+        String accessToken = accessTokenService.getActiveAccessTokenByUserId(user);
         List<GithubRepositoryResponse> githubRepositoryResponseList = githubRepositoryClient.getPublicRepositories(accessToken);
 
         List<WccgRepository> repos = toWccgRepositories(user, githubRepositoryResponseList);
@@ -29,6 +33,12 @@ public class WccgRepositoryService {
         wccgRepositoryRepository.saveAll(repos);
 
         return new WccgRepositoryServiceSyncResponse(repos.size());
+    }
+
+    private User getPersistentUser(User userPrincipal) {
+        User user = userService.getUserById(userPrincipal.getId())
+                .orElseThrow(UserNotFoundException::new);
+        return user;
     }
 
     private static List<WccgRepository> toWccgRepositories(User user, List<GithubRepositoryResponse> githubRepositoryResponseList) {
@@ -42,7 +52,7 @@ public class WccgRepositoryService {
                             response.getUpdatedAt().toLocalDateTime(),
                             response.isFork(),
                             true);
-                    repo.setUser(user);
+                    user.addRepository(repo);
                     return repo;
                 })
                 .toList();

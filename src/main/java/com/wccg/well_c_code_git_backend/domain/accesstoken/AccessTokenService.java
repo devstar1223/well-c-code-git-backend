@@ -30,9 +30,9 @@ public class AccessTokenService {
         }
     }
 
-    public String getActiveAccessTokenByUserId(Long userId) {
+    public String getActiveAccessTokenByUserId(User user) {
         AccessToken accessToken = accessTokenRepository
-                .findByUserIdAndIsActiveTrue(userId)
+                .findByUserAndIsActiveTrue(user)
                 .orElseThrow(AccessTokenNotFoundException::new);
         return accessToken.getAccessToken();
     }
