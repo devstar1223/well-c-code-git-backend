@@ -28,29 +28,4 @@ public class ServiceGetRepositoriesResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final boolean isActive;
-
-    public static ServiceGetRepositoriesResponse from(WccgRepository repository) {
-        return new ServiceGetRepositoriesResponse(
-                repository.getId(),
-                repository.getUser().getId(),
-                repository.getName(),
-                repository.getOwner(),
-                repository.getDescription(),
-                repository.getStar(),
-                repository.getLanguage(),
-                repository.isForked(),
-                repository.getGithubCreatedAt(),
-                repository.getGithubUpdatedAt(),
-                repository.getCreatedAt(),
-                repository.getUpdatedAt(),
-                repository.isActive()
-        );
-    }
-
-    public static List<ServiceGetRepositoriesResponse> fromList(List<WccgRepository> repositories) {
-        return repositories.stream()
-                .map(ServiceGetRepositoriesResponse::from)
-                .toList();
-    }
-
 }

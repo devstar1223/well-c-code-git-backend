@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper.WccgRepositoryDtoMapper.toServiceGetRepositoriesResponseList;
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper.WccgRepositoryDtoMapper.toServiceSyncResponse;
+
 @Service
 @RequiredArgsConstructor
 public class WccgRepositoryService {
@@ -38,13 +41,12 @@ public class WccgRepositoryService {
 
         wccgRepositoryRepository.saveAll(repos);
 
-        return new ServiceSyncResponse(repos.size());
+        return toServiceSyncResponse(repos.size());
     }
 
     private User getPersistentUser(User userPrincipal) {
-        User user = userService.getUserById(userPrincipal.getId())
+        return userService.getUserById(userPrincipal.getId())
                 .orElseThrow(UserNotFoundException::new);
-        return user;
     }
 
     private static List<WccgRepository> toWccgRepositories(User user, List<GithubRepositoryResponse> githubRepositoryResponseList) {
@@ -72,7 +74,7 @@ public class WccgRepositoryService {
         Sort sort = Sort.by(direction, sortType.getPropertyName());
 
         List<WccgRepository> wccgRepositoryList = wccgRepositoryRepository.findAllByIsActiveTrue(sort);
-        return ServiceGetRepositoriesResponse.fromList(wccgRepositoryList);
+        return toServiceGetRepositoriesResponseList(wccgRepositoryList);
     }
 
 
