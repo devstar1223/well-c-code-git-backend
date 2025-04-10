@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper.WccgRepositoryDtoMapper.toServiceGetRepositoriesResponseList;
-import static com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper.WccgRepositoryDtoMapper.toServiceSyncResponse;
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toServiceGetRepositoriesResponseList;
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toServiceSyncResponse;
 
 @Service
 @RequiredArgsConstructor

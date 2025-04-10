@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper.WccgRepositoryDtoMapper.toGetRepositoriesResponse;
-import static com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper.WccgRepositoryDtoMapper.toSyncResponse;
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toGetRepositoriesResponse;
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toSyncResponse;
 
 @RestController
 @RequiredArgsConstructor

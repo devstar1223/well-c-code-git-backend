@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.mapper;
+package com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper;
 
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.GetRepositoriesResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
