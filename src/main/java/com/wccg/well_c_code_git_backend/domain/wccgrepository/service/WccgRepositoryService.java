@@ -69,7 +69,10 @@ public class WccgRepositoryService {
                 .toList();
     }
 
-    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(RepositorySortType sortType, SortDirection sortDirection) {
+    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(String sortBy, String order) {
+        RepositorySortType sortType = RepositorySortType.from(sortBy);
+        SortDirection sortDirection = SortDirection.from(order);
+
         Sort.Direction direction = Sort.Direction.valueOf(sortDirection.name());
         Sort sort = Sort.by(direction, sortType.getPropertyName());
 

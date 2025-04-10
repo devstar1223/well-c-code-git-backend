@@ -1,13 +1,10 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.controller;
 
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.GetRepositoriesResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.SyncResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.RepositorySortType;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.SortDirection;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,6 @@ import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.Wccg
 @RequestMapping("/api/wccgrepository")
 public class WccgRepositoryController {
 
-    private final UserService userService;
     private final WccgRepositoryService wccgRepositoryService;
 
     @PreAuthorize("hasRole('USER')")
@@ -44,10 +40,7 @@ public class WccgRepositoryController {
             @RequestParam(name = "sort", defaultValue = "githubCreatedAt") String sortBy,
             @RequestParam(name = "order", defaultValue = "desc") String order
     ) {
-        RepositorySortType sortType = RepositorySortType.from(sortBy);
-        SortDirection sortDirection = SortDirection.from(order);
-
-        List<ServiceGetRepositoriesResponse> serviceResponses = wccgRepositoryService.getRepositoriesSorted(sortType, sortDirection);
+        List<ServiceGetRepositoriesResponse> serviceResponses = wccgRepositoryService.getRepositoriesSorted(sortBy, order);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
