@@ -1,11 +1,11 @@
 package com.wccg.well_c_code_git_backend.global.security.oauth.service;
 
-import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenSaveRequest;
-import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
-import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.domain.user.UserRole;
-import com.wccg.well_c_code_git_backend.domain.user.UserSaveRequest;
-import com.wccg.well_c_code_git_backend.domain.user.UserService;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.dto.AccessTokenSaveRequest;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.domain.user.model.UserRole;
+import com.wccg.well_c_code_git_backend.domain.user.dto.UserSaveRequest;
+import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubOauthClient;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubUserClient;
 import com.wccg.well_c_code_git_backend.global.security.jwt.JwtProvider;

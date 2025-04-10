@@ -1,10 +1,14 @@
-package com.wccg.well_c_code_git_backend.domain.wccgrepository;
+package com.wccg.well_c_code_git_backend.domain.wccgrepository.service;
 
-import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessTokenService;
-import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.domain.user.UserService;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.RepositorySortType;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.SortDirection;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.repository.WccgRepositoryRepository;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.WccgRepositoryServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubRepositoryClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubRepositoryResponse;
@@ -24,7 +28,7 @@ public class WccgRepositoryService {
     private final UserService userService;
 
     @Transactional
-    public WccgRepositoryServiceSyncResponse syncRepositoryFrom(User userPrincipal) {
+    public ServiceSyncResponse syncRepositoryFrom(User userPrincipal) {
         User user = getPersistentUser(userPrincipal);
 
         String accessToken = accessTokenService.getActiveAccessTokenByUserId(user);
@@ -34,7 +38,7 @@ public class WccgRepositoryService {
 
         wccgRepositoryRepository.saveAll(repos);
 
-        return new WccgRepositoryServiceSyncResponse(repos.size());
+        return new ServiceSyncResponse(repos.size());
     }
 
     private User getPersistentUser(User userPrincipal) {

@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.config;
+package com.wccg.well_c_code_git_backend.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

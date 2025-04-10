@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.global.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wccg.well_c_code_git_backend.global.exception.model.ErrorResponse;
+import com.wccg.well_c_code_git_backend.global.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

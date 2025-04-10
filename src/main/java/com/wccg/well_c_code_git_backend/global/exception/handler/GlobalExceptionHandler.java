@@ -2,7 +2,7 @@ package com.wccg.well_c_code_git_backend.global.exception.handler;
 
 import com.wccg.well_c_code_git_backend.global.exception.model.BaseException;
 import com.wccg.well_c_code_git_backend.global.exception.model.ErrorCode;
-import com.wccg.well_c_code_git_backend.global.exception.model.ErrorResponse;
+import com.wccg.well_c_code_git_backend.global.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

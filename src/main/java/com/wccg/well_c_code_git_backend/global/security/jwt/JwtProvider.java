@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.global.security.jwt;
 
-import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.domain.user.UserRole;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.domain.user.model.UserRole;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

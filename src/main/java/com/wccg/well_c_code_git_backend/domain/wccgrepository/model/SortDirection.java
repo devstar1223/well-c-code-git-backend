@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.domain.wccgrepository;
+package com.wccg.well_c_code_git_backend.domain.wccgrepository.model;
 
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.InvalidSortParameterException;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.wccg.well_c_code_git_backend.domain.user;
+package com.wccg.well_c_code_git_backend.domain.user.model;
 
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
-import com.wccg.well_c_code_git_backend.domain.accesstoken.AccessToken;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.WccgRepository;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

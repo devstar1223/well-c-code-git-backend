@@ -7,6 +7,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @RequiredArgsConstructor
-public class WccgRepositoryServiceSyncResponse {
+public class ServiceSyncResponse {
     private final int repositoryCount;
 }

@@ -1,7 +1,7 @@
-package com.wccg.well_c_code_git_backend.domain.wccgrepository;
+package com.wccg.well_c_code_git_backend.domain.wccgrepository.model;
 
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
-import com.wccg.well_c_code_git_backend.domain.user.User;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 

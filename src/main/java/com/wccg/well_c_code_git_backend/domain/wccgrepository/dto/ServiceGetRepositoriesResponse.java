@@ -1,6 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.dto;
 
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.WccgRepository;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

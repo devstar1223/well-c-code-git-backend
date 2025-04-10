@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.config;
+package com.wccg.well_c_code_git_backend.global.config;
 
 import com.wccg.well_c_code_git_backend.global.security.jwt.JwtAccessDeniedHandler;
 import com.wccg.well_c_code_git_backend.global.security.jwt.JwtAuthenticationFilter;

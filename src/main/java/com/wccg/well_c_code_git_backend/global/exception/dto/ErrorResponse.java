@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.global.exception.model;
+package com.wccg.well_c_code_git_backend.global.exception.dto;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;

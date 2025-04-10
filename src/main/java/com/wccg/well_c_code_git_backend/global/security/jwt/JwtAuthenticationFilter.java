@@ -1,9 +1,9 @@
 package com.wccg.well_c_code_git_backend.global.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wccg.well_c_code_git_backend.domain.user.User;
-import com.wccg.well_c_code_git_backend.domain.user.UserService;
-import com.wccg.well_c_code_git_backend.global.exception.model.ErrorResponse;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
+import com.wccg.well_c_code_git_backend.global.exception.dto.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

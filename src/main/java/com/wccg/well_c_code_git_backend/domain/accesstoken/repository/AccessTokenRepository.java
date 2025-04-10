@@ -1,6 +1,7 @@
-package com.wccg.well_c_code_git_backend.domain.accesstoken;
+package com.wccg.well_c_code_git_backend.domain.accesstoken.repository;
 
-import com.wccg.well_c_code_git_backend.domain.user.User;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
