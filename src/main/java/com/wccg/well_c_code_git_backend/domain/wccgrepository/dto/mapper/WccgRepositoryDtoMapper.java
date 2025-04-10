@@ -17,7 +17,7 @@ public class WccgRepositoryDtoMapper {
         return new SyncResponse(serviceResponse.getRepositoryCount());
     }
 
-    public static ServiceSyncResponse toServiceSyncResponse(int size){
+    public static ServiceSyncResponse toServiceSyncResponse(int size) {
         return new ServiceSyncResponse(size);
     }
 
@@ -44,7 +44,7 @@ public class WccgRepositoryDtoMapper {
         return result;
     }
 
-    public static ServiceGetRepositoriesResponse toServiceGetRepositoriesResponse(WccgRepository wccgRepository){
+    public static ServiceGetRepositoriesResponse toServiceGetRepositoriesResponse(WccgRepository wccgRepository) {
         return new ServiceGetRepositoriesResponse(
                 wccgRepository.getId(),
                 wccgRepository.getUser().getId(),
@@ -62,11 +62,9 @@ public class WccgRepositoryDtoMapper {
         );
     }
 
-    public static List<ServiceGetRepositoriesResponse> toServiceGetRepositoriesResponseList(List<WccgRepository> repositories){
-        List<ServiceGetRepositoriesResponse> responseList = new ArrayList<>();
-        for(WccgRepository repo : repositories){
-            responseList.add(toServiceGetRepositoriesResponse(repo));
-        }
-        return responseList;
+    public static List<ServiceGetRepositoriesResponse> toServiceGetRepositoriesResponseList(List<WccgRepository> repositories) {
+        return repositories.stream()
+                .map(WccgRepositoryDtoMapper::toServiceGetRepositoriesResponse)
+                .toList();
     }
 }
