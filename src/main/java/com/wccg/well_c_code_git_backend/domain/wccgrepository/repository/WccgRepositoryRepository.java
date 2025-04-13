@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface WccgRepositoryRepository extends JpaRepository<WccgRepository, Long> {
     List<WccgRepository> findAllByUserIdAndIsActiveTrue(Long userId,Sort sort);
+
+    List<WccgRepository> findAllByUserIdAndIsActiveTrue(Long userId);
 }
 

@@ -80,5 +80,8 @@ public class WccgRepositoryService {
         return toServiceGetRepositoriesResponseList(wccgRepositoryList);
     }
 
+    public List<WccgRepository> getRepositoriesByUserId(Long userId) {
+        return wccgRepositoryRepository.findAllByUserIdAndIsActiveTrue(userId);
+    }
 
 }
