@@ -1,11 +1,14 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.model;
 
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
+import com.wccg.well_c_code_git_backend.domain.branch.model.Branch;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -54,6 +57,9 @@ public class WccgRepository extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "wccgRepository", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Branch> branches = new ArrayList<>();
+
     //TODO : commit 테이블 연관관계 설정
 
     @Builder
@@ -81,5 +87,10 @@ public class WccgRepository extends BaseEntity {
                 .star(star)
                 .language(language)
                 .build();
+    }
+
+    public void addBranch(Branch branch){
+        branches.add(branch);
+        branch.setWccgRepository(this);
     }
 }
