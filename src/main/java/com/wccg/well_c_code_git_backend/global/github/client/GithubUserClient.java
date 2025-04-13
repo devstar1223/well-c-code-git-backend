@@ -2,7 +2,6 @@ package com.wccg.well_c_code_git_backend.global.github.client;
 
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubUserResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 

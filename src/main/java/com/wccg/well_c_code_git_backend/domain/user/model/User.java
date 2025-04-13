@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     private UserRole userRole;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private boolean isActive;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<AccessToken> accessTokens = new ArrayList<>();

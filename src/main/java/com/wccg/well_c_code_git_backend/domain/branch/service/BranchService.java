@@ -11,15 +11,11 @@ import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgReposi
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubBranchClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubBranchResponse;
-import com.wccg.well_c_code_git_backend.global.github.dto.GithubRepositoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toServiceSyncResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +38,9 @@ public class BranchService {
 
         int count = 0;
 
-        for(WccgRepository repo : repositories){
+        for (WccgRepository repo : repositories) {
             List<GithubBranchResponse> branches = githubBranchClient.getBranches(accessToken, owner, repo.getName());
-            for(GithubBranchResponse response : branches){
+            for (GithubBranchResponse response : branches) {
                 Branch newBranch = Branch.of(response.getName(), true);
                 repo.addBranch(newBranch);
                 branchRepository.save(newBranch);
@@ -52,13 +48,6 @@ public class BranchService {
             }
         }
 
-//        List<GithubRepositoryResponse> githubRepositoryResponseList = githubRepositoryClient.getPublicRepositories(accessToken);
-//
-//        List<WccgRepository> repos = toWccgRepositories(user, githubRepositoryResponseList);
-//
-//        wccgRepositoryRepository.saveAll(repos);
-//
-//        return toServiceSyncResponse(repos.size());
         return new ServiceSyncResponse(count);
     }
 

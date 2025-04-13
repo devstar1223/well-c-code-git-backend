@@ -13,15 +13,15 @@ import java.util.List;
 @UtilityClass
 public class WccgRepositoryDtoMapper {
 
-    public static SyncResponse toSyncResponse(ServiceSyncResponse serviceResponse) {
+    public SyncResponse toSyncResponse(ServiceSyncResponse serviceResponse) {
         return new SyncResponse(serviceResponse.getRepositoryCount());
     }
 
-    public static ServiceSyncResponse toServiceSyncResponse(int size) {
+    public ServiceSyncResponse toServiceSyncResponse(int size) {
         return new ServiceSyncResponse(size);
     }
 
-    public static List<GetRepositoriesResponse> toGetRepositoriesResponse(List<ServiceGetRepositoriesResponse> serviceResponses) {
+    public List<GetRepositoriesResponse> toGetRepositoriesResponse(List<ServiceGetRepositoriesResponse> serviceResponses) {
         List<GetRepositoriesResponse> result = new ArrayList<>();
 
         for (int i = 0; i < serviceResponses.size(); i++) {
@@ -44,7 +44,7 @@ public class WccgRepositoryDtoMapper {
         return result;
     }
 
-    public static ServiceGetRepositoriesResponse toServiceGetRepositoriesResponse(WccgRepository wccgRepository) {
+    public ServiceGetRepositoriesResponse toServiceGetRepositoriesResponse(WccgRepository wccgRepository) {
         return new ServiceGetRepositoriesResponse(
                 wccgRepository.getId(),
                 wccgRepository.getUser().getId(),
@@ -62,7 +62,7 @@ public class WccgRepositoryDtoMapper {
         );
     }
 
-    public static List<ServiceGetRepositoriesResponse> toServiceGetRepositoriesResponseList(List<WccgRepository> repositories) {
+    public List<ServiceGetRepositoriesResponse> toServiceGetRepositoriesResponseList(List<WccgRepository> repositories) {
         return repositories.stream()
                 .map(WccgRepositoryDtoMapper::toServiceGetRepositoriesResponse)
                 .toList();

@@ -21,7 +21,7 @@ public class AccessToken extends BaseEntity {
     private String accessToken;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private boolean isActive;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)

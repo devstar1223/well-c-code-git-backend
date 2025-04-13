@@ -3,8 +3,10 @@ package com.wccg.well_c_code_git_backend.domain.user.dto;
 import com.wccg.well_c_code_git_backend.domain.user.model.UserRole;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class UserSaveRequest {
     private final Long githubId;
