@@ -38,9 +38,10 @@ public class WccgRepositoryController {
     @GetMapping("/repositories")
     public ResponseEntity<List<GetRepositoriesResponse>> getRepositories(
             @RequestParam(name = "sort", defaultValue = "githubCreatedAt") String sortBy,
-            @RequestParam(name = "order", defaultValue = "desc") String order
+            @RequestParam(name = "order", defaultValue = "desc") String order,
+            @RequestParam(name = "userId") Long userId
     ) {
-        List<ServiceGetRepositoriesResponse> serviceResponses = wccgRepositoryService.getRepositoriesSorted(sortBy, order);
+        List<ServiceGetRepositoriesResponse> serviceResponses = wccgRepositoryService.getRepositoriesSorted(userId ,sortBy, order);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

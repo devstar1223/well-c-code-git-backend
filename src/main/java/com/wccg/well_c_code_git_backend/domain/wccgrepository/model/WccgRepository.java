@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "wccg_repository",
         indexes = {
-                @Index(name = "idx_active_star", columnList = "is_active, star"),
-                @Index(name = "idx_active_updated_at", columnList = "is_active, github_updated_at"),
-                @Index(name = "idx_active_created_at", columnList = "is_active, github_created_at")
+                @Index(name = "idx_user_active_star", columnList = "user_id, is_active, star"),
+                @Index(name = "idx_user_active_updated_at", columnList = "user_id, is_active, github_updated_at"),
+                @Index(name = "idx_user_active_created_at", columnList = "user_id, is_active, github_created_at")
         })
 public class WccgRepository extends BaseEntity {
 

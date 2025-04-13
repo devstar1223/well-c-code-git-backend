@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface WccgRepositoryRepository extends JpaRepository<WccgRepository, Long> {
-    List<WccgRepository> findAllByIsActiveTrue(Sort sort);
+    List<WccgRepository> findAllByUserIdAndIsActiveTrue(Long userId,Sort sort);
 }
 

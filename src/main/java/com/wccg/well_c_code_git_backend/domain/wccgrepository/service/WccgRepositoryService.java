@@ -69,14 +69,14 @@ public class WccgRepositoryService {
                 .toList();
     }
 
-    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(String sortBy, String order) {
+    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(Long userId, String sortBy, String order) {
         RepositorySortType sortType = RepositorySortType.from(sortBy);
         SortDirection sortDirection = SortDirection.from(order);
 
         Sort.Direction direction = Sort.Direction.valueOf(sortDirection.name());
         Sort sort = Sort.by(direction, sortType.getPropertyName());
 
-        List<WccgRepository> wccgRepositoryList = wccgRepositoryRepository.findAllByIsActiveTrue(sort);
+        List<WccgRepository> wccgRepositoryList = wccgRepositoryRepository.findAllByUserIdAndIsActiveTrue(userId, sort);
         return toServiceGetRepositoriesResponseList(wccgRepositoryList);
     }
 
