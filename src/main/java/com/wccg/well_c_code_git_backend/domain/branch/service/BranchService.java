@@ -30,27 +30,30 @@ public class BranchService {
     private final BranchRepository branchRepository;
 
     @Transactional
-    public ServiceSyncResponse SyncBranchFrom(User userPrincipal) {
+    public ServiceSyncResponse syncBranchFrom(User userPrincipal) {
         User user = getPersistentUser(userPrincipal);
-
         String accessToken = accessTokenService.getActiveAccessTokenByUserId(user);
         String owner = user.getGithubLoginId();
 
         List<WccgRepository> repositories = wccgRepositoryService.getRepositoriesByUserId(user.getId());
 
-        int count = 0;
+        int branchCount = repositories.stream()
+                .mapToInt(repo -> syncBranchesForRepository(repo, owner, accessToken))
+                .sum();
 
-        for (WccgRepository repo : repositories) {
-            List<GithubBranchResponse> branches = githubBranchClient.getBranches(accessToken, owner, repo.getName());
-            for (GithubBranchResponse response : branches) {
-                Branch newBranch = Branch.of(response.getName(), true);
-                repo.addBranch(newBranch);
-                branchRepository.save(newBranch);
-                count++;
-            }
-        }
+        return toServiceSyncResponse(branchCount);
+    }
 
-        return toServiceSyncResponse(count);
+    private int syncBranchesForRepository(WccgRepository repo, String owner, String accessToken) {
+        List<GithubBranchResponse> githubBranches = githubBranchClient.getBranches(accessToken, owner, repo.getName());
+
+        githubBranches.forEach(branchResponse -> {
+            Branch newBranch = Branch.of(branchResponse.getName(), true);
+            repo.addBranch(newBranch);
+            branchRepository.save(newBranch);
+        });
+
+        return githubBranches.size();
     }
 
     private User getPersistentUser(User userPrincipal) {

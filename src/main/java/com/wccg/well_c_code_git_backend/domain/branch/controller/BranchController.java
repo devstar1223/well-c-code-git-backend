@@ -26,7 +26,7 @@ public class BranchController {
     @PostMapping("/sync")
     public ResponseEntity<SyncResponse> sync(@AuthenticationPrincipal User user) {
 
-        ServiceSyncResponse serviceResponse = branchService.SyncBranchFrom(user);
+        ServiceSyncResponse serviceResponse = branchService.syncBranchFrom(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
