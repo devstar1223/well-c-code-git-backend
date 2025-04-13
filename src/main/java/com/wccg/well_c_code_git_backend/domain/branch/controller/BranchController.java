@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toSyncResponse;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/branch")
@@ -28,6 +30,6 @@ public class BranchController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new SyncResponse(serviceResponse.getBranchCount()));
+                .body(toSyncResponse(serviceResponse));
     }
 }

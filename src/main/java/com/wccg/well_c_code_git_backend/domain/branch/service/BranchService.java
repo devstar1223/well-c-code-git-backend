@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toServiceSyncResponse;
+
 @Service
 @RequiredArgsConstructor
 public class BranchService {
@@ -48,7 +50,7 @@ public class BranchService {
             }
         }
 
-        return new ServiceSyncResponse(count);
+        return toServiceSyncResponse(count);
     }
 
     private User getPersistentUser(User userPrincipal) {
