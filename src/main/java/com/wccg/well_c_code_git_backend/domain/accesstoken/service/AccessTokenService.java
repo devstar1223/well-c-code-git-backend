@@ -28,6 +28,10 @@ public class AccessTokenService {
     public void deactivatePreviousTokens(User user) {
         List<AccessToken> activeTokens = accessTokenRepository.findAllByUserAndIsActiveTrue(user);
 
+        userAccessTokenAllDeactivate(activeTokens);
+    }
+
+    private static void userAccessTokenAllDeactivate(List<AccessToken> activeTokens) {
         for (AccessToken token : activeTokens) {
             token.deactivate();
         }

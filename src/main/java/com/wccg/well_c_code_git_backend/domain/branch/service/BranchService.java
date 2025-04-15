@@ -36,11 +36,15 @@ public class BranchService {
 
         List<WccgRepository> repositories = wccgRepositoryService.getRepositoriesByUserId(UserId);
 
-        int branchCount = repositories.stream()
-                .mapToInt(repo -> syncBranchesForRepository(repo, owner, accessTokenValue))
-                .sum();
+        int branchCount = getBranchCountFromRepositories(repositories, owner, accessTokenValue);
 
         return toServiceSyncResponse(branchCount);
+    }
+
+    private int getBranchCountFromRepositories(List<WccgRepository> repositories, String owner, String accessTokenValue) {
+        return repositories.stream()
+                .mapToInt(repo -> syncBranchesForRepository(repo, owner, accessTokenValue))
+                .sum();
     }
 
     private String getAccessTokenValue(Long UserId) {
