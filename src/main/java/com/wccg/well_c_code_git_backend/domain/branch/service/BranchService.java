@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toServiceSyncResponse;
 
@@ -66,4 +67,7 @@ public class BranchService {
         return githubBranches.size();
     }
 
+    public List<Branch> getAllBranchByWccgRepositoryId(Long id){
+        return branchRepository.findAllByWccgRepositoryIdAndIsActiveTrue(id);
+    }
 }

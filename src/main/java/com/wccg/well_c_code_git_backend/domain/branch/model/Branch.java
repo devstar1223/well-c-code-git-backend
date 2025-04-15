@@ -12,6 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(columnList = "wccg_repository_id, is_active")
+})
 public class Branch extends BaseEntity {
 
     @Id
