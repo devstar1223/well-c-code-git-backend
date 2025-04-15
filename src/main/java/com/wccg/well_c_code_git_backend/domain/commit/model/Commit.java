@@ -3,10 +3,7 @@ package com.wccg.well_c_code_git_backend.domain.commit.model;
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.branch.model.Branch;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -35,4 +32,21 @@ public class Commit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private Branch branch;
+
+    @Builder
+    private Commit(String message, String hashValue, LocalDateTime commitCreatedAt, boolean isActive) {
+        this.message = message;
+        this.hashValue = hashValue;
+        this.commitCreatedAt = commitCreatedAt;
+        this.isActive = isActive;
+    }
+
+    public static Commit of(String message, String hashValue, LocalDateTime commitCreatedAt, boolean isActive) {
+        return Commit.builder()
+                .message(message)
+                .hashValue(hashValue)
+                .commitCreatedAt(commitCreatedAt)
+                .isActive(isActive)
+                .build();
+    }
 }
