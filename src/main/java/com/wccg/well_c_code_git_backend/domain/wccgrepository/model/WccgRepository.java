@@ -60,8 +60,6 @@ public class WccgRepository extends BaseEntity {
     @OneToMany(mappedBy = "wccgRepository", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Branch> branches = new ArrayList<>();
 
-    //TODO : commit 테이블 연관관계 설정
-
     @Builder
     private WccgRepository(String name, String owner, String description, LocalDateTime githubCreatedAt, LocalDateTime githubUpdatedAt, boolean isForked, int star, String language, boolean isActive) {
         this.name = name;

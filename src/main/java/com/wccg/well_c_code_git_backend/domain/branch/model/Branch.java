@@ -1,11 +1,13 @@
 package com.wccg.well_c_code_git_backend.domain.branch.model;
 
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
+import com.wccg.well_c_code_git_backend.domain.commit.model.Commit;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,8 +24,8 @@ public class Branch extends BaseEntity {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-//    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private final List<Commit> commits = new ArrayList<>();
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Commit> commits = new ArrayList<>();
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,5 +43,10 @@ public class Branch extends BaseEntity {
                 .name(name)
                 .isActive(isActive)
                 .build();
+    }
+
+    public void addCommit(Commit commit){
+        commits.add(commit);
+        commit.setBranch(this);
     }
 }
