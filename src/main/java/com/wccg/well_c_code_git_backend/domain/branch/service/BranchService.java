@@ -5,10 +5,9 @@ import com.wccg.well_c_code_git_backend.domain.branch.dto.ServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.model.Branch;
 import com.wccg.well_c_code_git_backend.domain.branch.repository.BranchRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.AccessTokenNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubBranchClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubBranchResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +25,29 @@ public class BranchService {
     private final AccessTokenService accessTokenService;
     private final GithubBranchClient githubBranchClient;
     private final WccgRepositoryService wccgRepositoryService;
-    private final UserService userService;
     private final BranchRepository branchRepository;
 
     @Transactional
     public ServiceSyncResponse syncBranchFrom(User userPrincipal) {
-        User user = getPersistentUser(userPrincipal);
-        String accessToken = accessTokenService.getActiveAccessTokenByUserId(user);
-        String owner = user.getGithubLoginId();
+        Long UserId = userPrincipal.getId();
+        String owner = userPrincipal.getGithubLoginId();
 
-        List<WccgRepository> repositories = wccgRepositoryService.getRepositoriesByUserId(user.getId());
+        String accessTokenValue = getAccessTokenValue(UserId);
+
+        List<WccgRepository> repositories = wccgRepositoryService.getRepositoriesByUserId(UserId);
 
         int branchCount = repositories.stream()
-                .mapToInt(repo -> syncBranchesForRepository(repo, owner, accessToken))
+                .mapToInt(repo -> syncBranchesForRepository(repo, owner, accessTokenValue))
                 .sum();
 
         return toServiceSyncResponse(branchCount);
+    }
+
+    private String getAccessTokenValue(Long UserId) {
+        return accessTokenService
+                .getActiveAccessTokenByUserId(UserId)
+                .orElseThrow(AccessTokenNotFoundException::new)
+                .getAccessToken();
     }
 
     private int syncBranchesForRepository(WccgRepository repo, String owner, String accessToken) {
@@ -56,8 +62,4 @@ public class BranchService {
         return githubBranches.size();
     }
 
-    private User getPersistentUser(User userPrincipal) {
-        return userService.getUserById(userPrincipal.getId())
-                .orElseThrow(UserNotFoundException::new);
-    }
 }

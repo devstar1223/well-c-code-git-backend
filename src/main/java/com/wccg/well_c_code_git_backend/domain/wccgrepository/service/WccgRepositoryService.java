@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.service;
 
+import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
@@ -9,6 +10,7 @@ import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgReposito
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.repository.WccgRepositoryRepository;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.AccessTokenNotFoundException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubRepositoryClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubRepositoryResponse;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toServiceGetRepositoriesResponseList;
 import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toServiceSyncResponse;
@@ -34,8 +37,11 @@ public class WccgRepositoryService {
     public ServiceSyncResponse syncRepositoryFrom(User userPrincipal) {
         User user = getPersistentUser(userPrincipal);
 
-        String accessToken = accessTokenService.getActiveAccessTokenByUserId(user);
-        List<GithubRepositoryResponse> githubRepositoryResponseList = githubRepositoryClient.getPublicRepositories(accessToken);
+        AccessToken accessToken = accessTokenService
+                .getActiveAccessTokenByUserId(user.getId())
+                .orElseThrow(AccessTokenNotFoundException::new);
+
+        List<GithubRepositoryResponse> githubRepositoryResponseList = githubRepositoryClient.getPublicRepositories(accessToken.getAccessToken());
 
         List<WccgRepository> repos = toWccgRepositories(user, githubRepositoryResponseList);
 

@@ -4,11 +4,11 @@ import com.wccg.well_c_code_git_backend.domain.accesstoken.repository.AccessToke
 import com.wccg.well_c_code_git_backend.domain.accesstoken.dto.AccessTokenSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.AccessTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +33,7 @@ public class AccessTokenService {
         }
     }
 
-    public String getActiveAccessTokenByUserId(User user) {
-        AccessToken accessToken = accessTokenRepository
-                .findByUserAndIsActiveTrue(user)
-                .orElseThrow(AccessTokenNotFoundException::new);
-        return accessToken.getAccessToken();
+    public Optional<AccessToken> getActiveAccessTokenByUserId(Long id) {
+        return accessTokenRepository.findByUserIdAndIsActiveTrue(id);
     }
 }

@@ -13,5 +13,5 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
 
     List<AccessToken> findAllByUserAndIsActiveTrue(User user);
 
-    Optional<AccessToken> findByUserAndIsActiveTrue(User user);
+    Optional<AccessToken> findByUserIdAndIsActiveTrue(Long id);
 }
