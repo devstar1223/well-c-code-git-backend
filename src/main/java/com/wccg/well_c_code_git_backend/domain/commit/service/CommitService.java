@@ -37,28 +37,41 @@ public class CommitService {
 
         List<WccgRepository> repositories = wccgRepositoryService.getRepositoriesByUserId(UserId);
 
-        int count = 0;
+        int count = syncCommitsForAllRepositories(repositories, accessTokenValue, owner);
 
+        return toServiceSyncResponse(count);
+    }
+
+    private int syncCommitsForAllRepositories(List<WccgRepository> repositories, String accessToken, String owner) {
+        int count = 0;
         for (WccgRepository repo : repositories) {
             List<Branch> branches = branchService.getAllBranchByWccgRepositoryId(repo.getId());
             for (Branch branch : branches) {
-                List<GithubCommitResponse> list = githubCommitsClient.getCommits(accessTokenValue, owner, repo.getName(), branch.getName());
-                for (GithubCommitResponse response : list) {
-                    if (!response.getAuthor().getLogin().equals(owner)) {
-                        continue;
-                    }
-                    Commit commit = Commit.of(
-                            response.getCommit().getMessage(),
-                            response.getSha(),
-                            response.getCommit().getAuthor().getDate().toLocalDateTime(),
-                            true);
-                    commitRepository.save(commit);
-                    count++;
-                }
+                List<GithubCommitResponse> responses = githubCommitsClient.getCommits(accessToken, owner, repo.getName(), branch.getName());
+                count += saveCommits(branch, responses, owner);
             }
         }
+        return count;
+    }
 
-        return toServiceSyncResponse(count);
+    private int saveCommits(Branch branch, List<GithubCommitResponse> responses, String owner) {
+        for (GithubCommitResponse response : responses) {
+            if (!response.getAuthor().getLogin().equals(owner)){
+                return 0;
+            }
+            Commit commit = getCommit(response);
+            branch.addCommit(commit);
+            commitRepository.save(commit);
+        }
+        return 1;
+    }
+
+    private static Commit getCommit(GithubCommitResponse response) {
+        return Commit.of(
+                response.getCommit().getMessage(),
+                response.getSha(),
+                response.getCommit().getAuthor().getDate().toLocalDateTime(),
+                true);
     }
 
     private String getAccessTokenValue(Long UserId) {
