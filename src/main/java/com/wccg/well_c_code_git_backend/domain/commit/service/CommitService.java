@@ -15,8 +15,9 @@ import com.wccg.well_c_code_git_backend.global.github.dto.GithubCommitResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.wccg.well_c_code_git_backend.domain.commit.mapper.CommitDtoMapper.toServiceSyncResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class CommitService {
     private final BranchService branchService;
     private final CommitRepository commitRepository;
 
-    public int syncCommitFrom(User userPrincipal) {
+    public CommitServiceSyncResponse syncCommitFrom(User userPrincipal) {
         Long UserId = userPrincipal.getId();
         String owner = userPrincipal.getGithubLoginId();
 
@@ -41,9 +42,9 @@ public class CommitService {
         for (WccgRepository repo : repositories) {
             List<Branch> branches = branchService.getAllBranchByWccgRepositoryId(repo.getId());
             for (Branch branch : branches) {
-                List<GithubCommitResponse> list =  githubCommitsClient.getCommits(accessTokenValue, owner, repo.getName(), branch.getName());
-                for(GithubCommitResponse response : list){
-                    if(!response.getAuthor().getLogin().equals(owner)){
+                List<GithubCommitResponse> list = githubCommitsClient.getCommits(accessTokenValue, owner, repo.getName(), branch.getName());
+                for (GithubCommitResponse response : list) {
+                    if (!response.getAuthor().getLogin().equals(owner)) {
                         continue;
                     }
                     Commit commit = Commit.of(
@@ -57,7 +58,7 @@ public class CommitService {
             }
         }
 
-        return count;
+        return toServiceSyncResponse(count);
     }
 
     private String getAccessTokenValue(Long UserId) {

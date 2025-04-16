@@ -1,6 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.commit.controller;
 
 import com.wccg.well_c_code_git_backend.domain.commit.dto.CommitServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.domain.commit.dto.CommitSyncResponse;
 import com.wccg.well_c_code_git_backend.domain.commit.service.CommitService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import static com.wccg.well_c_code_git_backend.domain.commit.mapper.CommitDtoMapper.toSyncResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,12 +24,11 @@ public class CommitController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/sync")
-    public ResponseEntity<String> sync(@AuthenticationPrincipal User user) {
-
-        int serviceResponse = commitService.syncCommitFrom(user);
+    public ResponseEntity<CommitSyncResponse> sync(@AuthenticationPrincipal User user) {
+        CommitServiceSyncResponse commitServiceSyncResponse = commitService.syncCommitFrom(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(serviceResponse+"개의 커밋");
+                .body(toSyncResponse(commitServiceSyncResponse));
     }
 }
