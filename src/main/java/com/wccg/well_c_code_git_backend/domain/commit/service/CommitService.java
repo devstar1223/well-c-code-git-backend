@@ -55,15 +55,18 @@ public class CommitService {
     }
 
     private int saveCommits(Branch branch, List<GithubCommitResponse> responses, String owner) {
+        int count = 0;
         for (GithubCommitResponse response : responses) {
             if (!response.getAuthor().getLogin().equals(owner)){
-                return 0;
+                continue;
             }
             Commit commit = getCommit(response);
             branch.addCommit(commit);
+            branch.getWccgRepository().getUser().addCommit(commit);
             commitRepository.save(commit);
+            count++;
         }
-        return 1;
+        return count;
     }
 
     private static Commit getCommit(GithubCommitResponse response) {

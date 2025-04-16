@@ -2,6 +2,7 @@ package com.wccg.well_c_code_git_backend.domain.user.model;
 
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
+import com.wccg.well_c_code_git_backend.domain.commit.model.Commit;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -50,6 +51,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<WccgRepository> wccgRepositories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Commit> commits = new ArrayList<>();
+
     @Builder
     private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
         this.githubId = githubId;
@@ -81,5 +85,10 @@ public class User extends BaseEntity {
     public void addRepository(WccgRepository repository) {
         wccgRepositories.add(repository);
         repository.setUser(this);
+    }
+
+    public void addCommit(Commit commit) {
+        commits.add(commit);
+        commit.setUser(this);
     }
 }

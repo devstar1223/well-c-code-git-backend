@@ -2,6 +2,7 @@ package com.wccg.well_c_code_git_backend.domain.commit.model;
 
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.branch.model.Branch;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,11 @@ public class Commit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private Branch branch;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
     private Commit(String message, String hashValue, LocalDateTime commitCreatedAt, boolean isActive) {
