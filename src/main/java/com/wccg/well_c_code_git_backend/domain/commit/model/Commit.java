@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(columnList = "user_id, is_active")
+})
 public class Commit extends BaseEntity {
 
     @Id

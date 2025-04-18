@@ -42,6 +42,10 @@ public class CommitService {
         return toServiceSyncResponse(count);
     }
 
+    public List<Commit> getAllCommitByUserId(Long userId){
+        return commitRepository.findAllByUserIdAndIsActiveTrue(userId);
+    }
+
     private int syncCommitsForAllRepositories(List<WccgRepository> repositories, String accessToken, String owner) {
         int count = 0;
         for (WccgRepository repo : repositories) {
