@@ -6,6 +6,7 @@ import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepo
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.SyncResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
+import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,12 @@ public class WccgRepositoryController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<SyncResponse> sync(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse> sync(@AuthenticationPrincipal User user) {
         ServiceSyncResponse serviceResponse = wccgRepositoryService.syncRepositoryFrom(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(toSyncResponse(serviceResponse));
+                .body(ApiResponse.ok(toSyncResponse(serviceResponse),"이용자 GitHub 리포지토리 동기화 및 저장 완료"));
     }
 
 
@@ -74,7 +75,7 @@ public class WccgRepositoryController {
                     → 스타 수 기준 내림차순으로 정렬된 리포지토리 목록을 반환합니다.
                     """
     )
-    public ResponseEntity<List<GetRepositoriesResponse>> getRepositories(
+    public ResponseEntity<ApiResponse> getRepositories(
             @RequestParam(name = "sort", defaultValue = "githubCreatedAt") String sortBy,
             @RequestParam(name = "order", defaultValue = "desc") String order,
             @RequestParam(name = "userId") Long userId
@@ -83,6 +84,6 @@ public class WccgRepositoryController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(toGetRepositoriesResponse(serviceResponses));
+                .body(ApiResponse.ok(toGetRepositoriesResponse(serviceResponses),"이용자의 리포지토리 목록 조회 완료"));
     }
 }

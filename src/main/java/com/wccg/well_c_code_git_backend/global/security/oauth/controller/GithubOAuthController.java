@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.global.security.oauth.controller;
 
+import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.service.GithubOAuthService;
@@ -28,10 +29,10 @@ public class GithubOAuthController {
                     """
     )
     @GetMapping("/login/github")
-    public ResponseEntity<GithubLoginUrlResponse> getGithubLoginUrl() {
+    public ResponseEntity<ApiResponse> getGithubLoginUrl() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(githubOAuthService.generateLoginUrl());
+                .body(ApiResponse.ok(githubOAuthService.generateLoginUrl(),"GitHub 로그인 URL 발급 완료"));
     }
 
     @Operation(
@@ -49,10 +50,10 @@ public class GithubOAuthController {
                     """
     )
     @GetMapping("/callback/github")
-    public ResponseEntity<LoginResponse> githubCallback(@RequestParam("code") String code) {
+    public ResponseEntity<ApiResponse> githubCallback(@RequestParam("code") String code) {
         LoginResponse loginResponse = githubOAuthService.processGithubCallback(code);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(loginResponse);
+                .body(ApiResponse.ok(loginResponse,"GitHub OAuth 콜백 처리 완료"));
     }
 }

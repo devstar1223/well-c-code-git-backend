@@ -4,6 +4,7 @@ import com.wccg.well_c_code_git_backend.domain.branch.dto.ServiceSyncResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.dto.SyncResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.service.BranchService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +41,12 @@ public class BranchController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<SyncResponse> sync(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse> sync(@AuthenticationPrincipal User user) {
 
         ServiceSyncResponse serviceResponse = branchService.syncBranchFrom(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(toSyncResponse(serviceResponse));
+                .body(ApiResponse.ok(toSyncResponse(serviceResponse),"이용자 GitHub 브랜치 동기화 및 저장 완료"));
     }
 }
