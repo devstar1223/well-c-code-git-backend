@@ -46,6 +46,15 @@ public class WccgRepositoryService {
         return toServiceSyncResponse(repos.size());
     }
 
+    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(Long userId, String sortBy, String order) {
+        userService.getUserById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        Sort sort = setSort(sortBy, order);
+
+        List<WccgRepository> wccgRepositoryList = wccgRepositoryRepository.findAllByUserIdAndIsActiveTrue(userId, sort);
+        return toServiceGetRepositoriesResponseList(wccgRepositoryList);
+    }
+
     private String getAccessTokenValue(User user) {
         return accessTokenService
                 .getActiveAccessTokenByUserId(user.getId())
@@ -76,13 +85,6 @@ public class WccgRepositoryService {
                     return repo;
                 })
                 .toList();
-    }
-
-    public List<ServiceGetRepositoriesResponse> getRepositoriesSorted(Long userId, String sortBy, String order) {
-        Sort sort = setSort(sortBy, order);
-
-        List<WccgRepository> wccgRepositoryList = wccgRepositoryRepository.findAllByUserIdAndIsActiveTrue(userId, sort);
-        return toServiceGetRepositoriesResponseList(wccgRepositoryList);
     }
 
     private static Sort setSort(String sortBy, String order) {
