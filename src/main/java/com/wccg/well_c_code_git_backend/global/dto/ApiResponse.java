@@ -19,4 +19,8 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> ok(T data, String message) {
         return new ApiResponse<>(HttpStatus.OK,true, message, data);
     }
+
+    public static ApiResponse<ErrorResponse> failure(ErrorResponse errorResponse) {
+        return new ApiResponse<>(HttpStatus.valueOf(errorResponse.getStatus()), false, errorResponse.getMessage(), errorResponse);
+    }
 }

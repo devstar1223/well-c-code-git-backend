@@ -1,6 +1,7 @@
 package com.wccg.well_c_code_git_backend.global.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wccg.well_c_code_git_backend.global.dto.ApiResponse; // ApiResponse import 추가
 import com.wccg.well_c_code_git_backend.global.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,11 +29,13 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
                 request
         );
 
-        response.setStatus(HttpStatus.FORBIDDEN.value());
+        ApiResponse<ErrorResponse> apiResponse = ApiResponse.failure(errorResponse);
+
+        response.setStatus(apiResponse.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String body = objectMapper.writeValueAsString(errorResponse);
+        String body = objectMapper.writeValueAsString(apiResponse);
         response.getWriter().write(body);
     }
 }

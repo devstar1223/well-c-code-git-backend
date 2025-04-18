@@ -3,6 +3,7 @@ package com.wccg.well_c_code_git_backend.global.exception.handler;
 import com.wccg.well_c_code_git_backend.global.exception.model.BaseException;
 import com.wccg.well_c_code_git_backend.global.exception.model.ErrorCode;
 import com.wccg.well_c_code_git_backend.global.exception.dto.ErrorResponse;
+import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,20 +17,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ErrorResponse> handleBaseException(
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleBaseException(
             BaseException exception,
             HttpServletRequest request
     ) {
         ErrorCode errorCode = exception.getErrorCode();
+        ErrorResponse errorResponse = ErrorResponse.of(
+                errorCode.getStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage(),
+                request
+        );
 
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(ErrorResponse.of(
-                        errorCode.getStatus(),
-                        errorCode.getCode(),
-                        errorCode.getMessage(),
-                        request
-                ));
+                .body(ApiResponse.failure(errorResponse));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -38,15 +40,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnexpectedException(Exception exception, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleUnexpectedException(Exception exception, HttpServletRequest request) {
         log.error("[Unhandled Exception] URI: {} / Message: {}", request.getRequestURI(), exception.getMessage());
 
+        ErrorResponse errorResponse = ErrorResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "E999",
+                "서버 내부에 알수 없는 오류가 발생했습니다.",
+                request
+        );
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponse.of(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                        "E999",
-                        "서버 내부에 알수 없는 오류가 발생했습니다.",
-                        request
-                ));
+                .body(ApiResponse.failure(errorResponse));
     }
 }

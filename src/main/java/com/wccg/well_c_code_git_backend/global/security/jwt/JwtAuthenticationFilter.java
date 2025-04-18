@@ -3,6 +3,7 @@ package com.wccg.well_c_code_git_backend.global.security.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
+import com.wccg.well_c_code_git_backend.global.dto.ApiResponse; // ApiResponse import 추가
 import com.wccg.well_c_code_git_backend.global.exception.dto.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     requestURI.startsWith("/h2-console/") ||
                     requestURI.startsWith("/api/wccgrepository/repositories") ||
                     requestURI.startsWith("/swagger-ui/") ||
-                    requestURI.startsWith("/v3/api-docs")
+                    requestURI.startsWith("/v3/api-docs") ||
+                    requestURI.startsWith("/test")
             ) {
                 filterChain.doFilter(request, response);
                 return;
@@ -90,11 +92,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 request
         );
 
-        response.setStatus(status.value());
+        ApiResponse<ErrorResponse> apiResponse = ApiResponse.failure(errorResponse);
+
+        response.setStatus(apiResponse.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String responseBody = objectMapper.writeValueAsString(errorResponse);
+        String responseBody = objectMapper.writeValueAsString(apiResponse);
         response.getWriter().write(responseBody);
     }
 }
