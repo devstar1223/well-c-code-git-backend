@@ -3,7 +3,7 @@ package com.wccg.well_c_code_git_backend.domain.commit.service;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.branch.model.Branch;
 import com.wccg.well_c_code_git_backend.domain.branch.service.BranchService;
-import com.wccg.well_c_code_git_backend.domain.commit.dto.CommitServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.domain.commit.dto.service.response.ServiceSyncCommitResponse;
 import com.wccg.well_c_code_git_backend.domain.commit.model.Commit;
 import com.wccg.well_c_code_git_backend.domain.commit.repository.CommitRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
@@ -29,7 +29,7 @@ public class CommitService {
     private final BranchService branchService;
     private final CommitRepository commitRepository;
 
-    public CommitServiceSyncResponse syncCommitFrom(User userPrincipal) {
+    public ServiceSyncCommitResponse syncCommitFor(User userPrincipal) {
         Long UserId = userPrincipal.getId();
         String owner = userPrincipal.getGithubLoginId();
 

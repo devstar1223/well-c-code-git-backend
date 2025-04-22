@@ -1,7 +1,6 @@
 package com.wccg.well_c_code_git_backend.global.security.oauth.controller;
 
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
-import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.service.GithubOAuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +31,7 @@ public class GithubOAuthController {
     public ResponseEntity<ApiResponse> getGithubLoginUrl() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.ok(githubOAuthService.generateLoginUrl(),"GitHub 로그인 URL 발급 완료"));
+                .body(ApiResponse.ok(githubOAuthService.createLoginUrl(),"GitHub 로그인 URL 발급 완료"));
     }
 
     @Operation(

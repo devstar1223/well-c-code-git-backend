@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.branch.service;
 
 import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
-import com.wccg.well_c_code_git_backend.domain.branch.dto.ServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.domain.branch.dto.service.response.ServiceSyncBranchResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.model.Branch;
 import com.wccg.well_c_code_git_backend.domain.branch.repository.BranchRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toServiceSyncResponse;
+import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toServiceSyncBranchResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class BranchService {
     private final BranchRepository branchRepository;
 
     @Transactional
-    public ServiceSyncResponse syncBranchFrom(User userPrincipal) {
+    public ServiceSyncBranchResponse syncBranchFor(User userPrincipal) {
         Long UserId = userPrincipal.getId();
         String owner = userPrincipal.getGithubLoginId();
 
@@ -39,7 +38,7 @@ public class BranchService {
 
         int branchCount = getBranchCountFromRepositories(repositories, owner, accessTokenValue);
 
-        return toServiceSyncResponse(branchCount);
+        return toServiceSyncBranchResponse(branchCount);
     }
 
     private int getBranchCountFromRepositories(List<WccgRepository> repositories, String owner, String accessTokenValue) {

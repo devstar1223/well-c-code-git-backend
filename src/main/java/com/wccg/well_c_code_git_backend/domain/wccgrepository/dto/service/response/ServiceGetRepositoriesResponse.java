@@ -1,4 +1,4 @@
-package com.wccg.well_c_code_git_backend.domain.wccgrepository.dto;
+package com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @RequiredArgsConstructor
-public class GetRepositoriesResponse {
-    private final int seq;
-
+public class ServiceGetRepositoriesResponse {
     private final Long id;
     private final Long userId;
 
@@ -24,4 +22,8 @@ public class GetRepositoriesResponse {
 
     private final LocalDateTime githubCreatedAt;
     private final LocalDateTime githubUpdatedAt;
+
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+    private final boolean isActive;
 }

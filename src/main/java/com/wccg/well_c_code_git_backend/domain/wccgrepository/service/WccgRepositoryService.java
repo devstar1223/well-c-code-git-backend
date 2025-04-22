@@ -3,8 +3,8 @@ package com.wccg.well_c_code_git_backend.domain.wccgrepository.service;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceGetRepositoriesResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceSyncWccgRepositoryResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.RepositorySortType;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.SortDirection;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
@@ -32,7 +32,7 @@ public class WccgRepositoryService {
     private final UserService userService;
 
     @Transactional
-    public ServiceSyncResponse syncRepositoryFrom(User userPrincipal) {
+    public ServiceSyncWccgRepositoryResponse syncWccgRepositoryFor(User userPrincipal) {
         User user = getPersistentUser(userPrincipal);
 
         String accessTokenValue = getAccessTokenValue(user);

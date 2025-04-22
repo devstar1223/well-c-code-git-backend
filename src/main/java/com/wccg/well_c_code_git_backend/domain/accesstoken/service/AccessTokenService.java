@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.accesstoken.service;
 
 import com.wccg.well_c_code_git_backend.domain.accesstoken.repository.AccessTokenRepository;
-import com.wccg.well_c_code_git_backend.domain.accesstoken.dto.AccessTokenSaveRequest;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.dto.service.request.AccessTokenSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +28,7 @@ public class AccessTokenService {
     public void deactivatePreviousTokens(User user) {
         List<AccessToken> activeTokens = accessTokenRepository.findAllByUserAndIsActiveTrue(user);
 
-        userAccessTokenAllDeactivate(activeTokens);
-    }
-
-    private static void userAccessTokenAllDeactivate(List<AccessToken> activeTokens) {
-        for (AccessToken token : activeTokens) {
-            token.deactivate();
-        }
+        activeTokens.forEach(AccessToken::deactivate);
     }
 
     public Optional<AccessToken> getActiveAccessTokenByUserId(Long id) {

@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.status.mapper;
 
-import com.wccg.well_c_code_git_backend.domain.status.dto.GetStatusResponse;
-import com.wccg.well_c_code_git_backend.domain.status.dto.ServiceGetStatusResponse;
+import com.wccg.well_c_code_git_backend.domain.status.dto.controller.response.GetStatusResponse;
+import com.wccg.well_c_code_git_backend.domain.status.dto.service.response.ServiceGetStatusResponse;
 
 public final class StatusDtoMapper {
 

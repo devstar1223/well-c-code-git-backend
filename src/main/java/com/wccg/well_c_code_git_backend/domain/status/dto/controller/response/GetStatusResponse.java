@@ -1,6 +1,5 @@
-package com.wccg.well_c_code_git_backend.domain.status.dto;
+package com.wccg.well_c_code_git_backend.domain.status.dto.controller.response;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

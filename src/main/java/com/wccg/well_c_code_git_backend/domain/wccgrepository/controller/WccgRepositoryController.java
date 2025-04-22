@@ -1,10 +1,8 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.controller;
 
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.GetRepositoriesResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.SyncResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceGetRepositoriesResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceSyncWccgRepositoryResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,8 +41,8 @@ public class WccgRepositoryController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<ApiResponse> sync(@AuthenticationPrincipal User user) {
-        ServiceSyncResponse serviceResponse = wccgRepositoryService.syncRepositoryFrom(user);
+    public ResponseEntity<ApiResponse> syncWccgRepository(@AuthenticationPrincipal User user) {
+        ServiceSyncWccgRepositoryResponse serviceResponse = wccgRepositoryService.syncWccgRepositoryFor(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

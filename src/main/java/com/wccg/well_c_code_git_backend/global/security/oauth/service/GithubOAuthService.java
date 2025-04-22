@@ -1,10 +1,10 @@
 package com.wccg.well_c_code_git_backend.global.security.oauth.service;
 
-import com.wccg.well_c_code_git_backend.domain.accesstoken.dto.AccessTokenSaveRequest;
+import com.wccg.well_c_code_git_backend.domain.accesstoken.dto.service.request.AccessTokenSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.service.AccessTokenService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.model.UserRole;
-import com.wccg.well_c_code_git_backend.domain.user.dto.UserSaveRequest;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubOauthClient;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubUserClient;
@@ -28,7 +28,7 @@ public class GithubOAuthService {
     private final AccessTokenService accessTokenService;
     private final JwtProvider jwtProvider;
 
-    public GithubLoginUrlResponse generateLoginUrl() {
+    public GithubLoginUrlResponse createLoginUrl() {
         String githubAuthorizeUrl = createGithubAuthorizeUrl();
         return new GithubLoginUrlResponse(githubAuthorizeUrl);
     }

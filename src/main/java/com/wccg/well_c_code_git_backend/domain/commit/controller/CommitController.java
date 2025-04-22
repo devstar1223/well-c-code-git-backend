@@ -1,7 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.commit.controller;
 
-import com.wccg.well_c_code_git_backend.domain.commit.dto.CommitServiceSyncResponse;
-import com.wccg.well_c_code_git_backend.domain.commit.dto.CommitSyncResponse;
+import com.wccg.well_c_code_git_backend.domain.commit.dto.service.response.ServiceSyncCommitResponse;
 import com.wccg.well_c_code_git_backend.domain.commit.service.CommitService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -39,11 +38,11 @@ public class CommitController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<ApiResponse> sync(@AuthenticationPrincipal User user) {
-        CommitServiceSyncResponse commitServiceSyncResponse = commitService.syncCommitFrom(user);
+    public ResponseEntity<ApiResponse> syncCommit(@AuthenticationPrincipal User user) {
+        ServiceSyncCommitResponse serviceSyncCommitResponse = commitService.syncCommitFor(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.ok(toSyncResponse(commitServiceSyncResponse),"이용자 GitHub 커밋 동기화 및 저장 완료"));
+                .body(ApiResponse.ok(toSyncResponse(serviceSyncCommitResponse),"이용자 GitHub 커밋 동기화 및 저장 완료"));
     }
 }

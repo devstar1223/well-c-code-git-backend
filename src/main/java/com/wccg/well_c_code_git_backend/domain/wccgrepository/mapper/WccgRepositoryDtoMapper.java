@@ -1,9 +1,9 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper;
 
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.GetRepositoriesResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceGetRepositoriesResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.ServiceSyncResponse;
-import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.SyncResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.controller.response.GetRepositoriesResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceGetRepositoriesResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceSyncWccgRepositoryResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.controller.response.SyncWccgRepositoryResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 
 import java.util.ArrayList;
@@ -15,12 +15,12 @@ public final class WccgRepositoryDtoMapper {
 
     }
 
-    public static SyncResponse toSyncResponse(ServiceSyncResponse serviceResponse) {
-        return new SyncResponse(serviceResponse.getRepositoryCount());
+    public static SyncWccgRepositoryResponse toSyncResponse(ServiceSyncWccgRepositoryResponse serviceResponse) {
+        return new SyncWccgRepositoryResponse(serviceResponse.getRepositoryCount());
     }
 
-    public static ServiceSyncResponse toServiceSyncResponse(int size) {
-        return new ServiceSyncResponse(size);
+    public static ServiceSyncWccgRepositoryResponse toServiceSyncResponse(int size) {
+        return new ServiceSyncWccgRepositoryResponse(size);
     }
 
     public static List<GetRepositoriesResponse> toGetRepositoriesResponse(List<ServiceGetRepositoriesResponse> serviceResponses) {

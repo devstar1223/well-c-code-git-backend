@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.branch.mapper;
 
-import com.wccg.well_c_code_git_backend.domain.branch.dto.ServiceSyncResponse;
-import com.wccg.well_c_code_git_backend.domain.branch.dto.SyncResponse;
+import com.wccg.well_c_code_git_backend.domain.branch.dto.service.response.ServiceSyncBranchResponse;
+import com.wccg.well_c_code_git_backend.domain.branch.dto.controller.response.SyncBranchResponse;
 
 public final class BranchDtoMapper {
 
@@ -9,11 +9,11 @@ public final class BranchDtoMapper {
 
     }
 
-    public static SyncResponse toSyncResponse(ServiceSyncResponse serviceSyncResponse){
-        return new SyncResponse(serviceSyncResponse.getBranchCount());
+    public static SyncBranchResponse toSyncBranchResponse(ServiceSyncBranchResponse serviceResponse){
+        return new SyncBranchResponse(serviceResponse.getBranchCount());
     }
 
-    public static ServiceSyncResponse toServiceSyncResponse(int branchCount){
-        return new ServiceSyncResponse(branchCount);
+    public static ServiceSyncBranchResponse toServiceSyncBranchResponse(int branchCount){
+        return new ServiceSyncBranchResponse(branchCount);
     }
 }

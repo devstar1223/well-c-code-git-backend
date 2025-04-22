@@ -1,7 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.branch.controller;
 
-import com.wccg.well_c_code_git_backend.domain.branch.dto.ServiceSyncResponse;
-import com.wccg.well_c_code_git_backend.domain.branch.dto.SyncResponse;
+import com.wccg.well_c_code_git_backend.domain.branch.dto.service.response.ServiceSyncBranchResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.service.BranchService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toSyncResponse;
+import static com.wccg.well_c_code_git_backend.domain.branch.mapper.BranchDtoMapper.toSyncBranchResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,12 +40,12 @@ public class BranchController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<ApiResponse> sync(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse> syncBranch(@AuthenticationPrincipal User user) {
 
-        ServiceSyncResponse serviceResponse = branchService.syncBranchFrom(user);
+        ServiceSyncBranchResponse serviceResponse = branchService.syncBranchFor(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.ok(toSyncResponse(serviceResponse),"이용자 GitHub 브랜치 동기화 및 저장 완료"));
+                .body(ApiResponse.ok(toSyncBranchResponse(serviceResponse),"이용자 GitHub 브랜치 동기화 및 저장 완료"));
     }
 }

@@ -2,7 +2,7 @@ package com.wccg.well_c_code_git_backend.domain.status.service;
 
 import com.wccg.well_c_code_git_backend.domain.commit.model.Commit;
 import com.wccg.well_c_code_git_backend.domain.commit.service.CommitService;
-import com.wccg.well_c_code_git_backend.domain.status.dto.ServiceGetStatusResponse;
+import com.wccg.well_c_code_git_backend.domain.status.dto.service.response.ServiceGetStatusResponse;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
@@ -23,7 +23,7 @@ public class StatusService {
     private final CommitService commitService;
     private final UserService userService;
 
-    public ServiceGetStatusResponse getStatus(Long userId) {
+    public ServiceGetStatusResponse getStatusBy(Long userId) {
         User user = userService.getUserById(userId)
                 .orElseThrow(UserNotFoundException::new);
 

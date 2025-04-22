@@ -1,7 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.user.service;
 
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.domain.user.dto.UserSaveRequest;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.UserSaveRequest;
 import com.wccg.well_c_code_git_backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
