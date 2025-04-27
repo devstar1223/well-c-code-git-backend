@@ -50,16 +50,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            echo "🔄 Pull latest Docker image..."
+            echo "🔄 가장 최근의 도커 이미지를 받아옵니다."
             docker pull devstar1223/well-c-code-git-backend:develop
             
-            echo "🛑 Stop existing container if running..."
+            echo "🛑 기존의 컨테이너가 있다면 정지합니다. "
             docker stop well-c-code-git-backend || true
             
-            echo "🗑️ Remove existing container if exists..."
+            echo "🗑️ 기존의 컨테이너가 있다면 제거합니다."
             docker rm well-c-code-git-backend || true
             
-            echo "🚀 Run new container..."
-            docker run -d -p 8080:8080 --name well-c-code-git-backend devstar1223/well-c-code-git-backend:develop
+            echo "🚀 컨테이너 실행중."
+            docker run -d --name well-c-code-git-backend -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} devstar1223/well-c-code-git-backend:develop
             
-            echo "✅ Deployment finished!"
+            echo "✅ 배포 끝!"
