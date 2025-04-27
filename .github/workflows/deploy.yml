@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -49,6 +50,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          envs: JASYPT_ENCRYPTOR_PASSWORD
           script: |
             echo "🔄 가장 최근의 도커 이미지를 받아옵니다."
             docker pull devstar1223/well-c-code-git-backend:develop
@@ -60,6 +62,9 @@ jobs:
             docker rm well-c-code-git-backend || true
             
             echo "🚀 컨테이너 실행중."
-            docker run -d --name well-c-code-git-backend -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} devstar1223/well-c-code-git-backend:develop
+            docker run -d --name well-c-code-git-backend \
+            -p 8080:8080 \
+            -e JASYPT_ENCRYPTOR_PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD \
+            devstar1223/well-c-code-git-backend:develop
             
             echo "✅ 배포 끝!"
