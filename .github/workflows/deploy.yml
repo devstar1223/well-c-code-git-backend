@@ -52,6 +52,8 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           envs: JASYPT_ENCRYPTOR_PASSWORD
           script: |
+            export JASYPT_ENCRYPTOR_PASSWORD="${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}"
+      
             echo "🔄 가장 최근의 도커 이미지를 받아옵니다."
             docker pull devstar1223/well-c-code-git-backend:develop
             
