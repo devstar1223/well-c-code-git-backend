@@ -67,6 +67,7 @@ jobs:
             docker run -d --name well-c-code-git-backend \
             -p 8080:8080 \
             -e JASYPT_ENCRYPTOR_PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD \
+            -e SPRING_PROFILES_ACTIVE=prod \
             devstar1223/well-c-code-git-backend:develop
             
             echo "✅ 배포 끝!"
