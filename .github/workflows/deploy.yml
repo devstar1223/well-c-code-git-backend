@@ -1,9 +1,9 @@
-name: CI/CD for develop branch
+name: CI/CD for main branch
 
 on:
   push:
     branches:
-      - develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -35,10 +35,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t devstar1223/well-c-code-git-backend:develop .
+        run: docker build -t devstar1223/well-c-code-git-backend:main .
 
       - name: Push Docker image to DockerHub
-        run: docker push devstar1223/well-c-code-git-backend:develop
+        run: docker push devstar1223/well-c-code-git-backend:main
 
   deploy-to-lightsail:
     needs: build-and-deploy
@@ -55,7 +55,7 @@ jobs:
             export JASYPT_ENCRYPTOR_PASSWORD="${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}"
       
             echo "🔄 가장 최근의 도커 이미지를 받아옵니다."
-            docker pull devstar1223/well-c-code-git-backend:develop
+            docker pull devstar1223/well-c-code-git-backend:main
             
             echo "🛑 기존의 컨테이너가 있다면 정지합니다. "
             docker stop well-c-code-git-backend || true
@@ -68,6 +68,6 @@ jobs:
             -p 8080:8080 \
             -e JASYPT_ENCRYPTOR_PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD \
             -e SPRING_PROFILES_ACTIVE=prod \
-            devstar1223/well-c-code-git-backend:develop
+            devstar1223/well-c-code-git-backend:main
             
             echo "✅ 배포 끝!"
