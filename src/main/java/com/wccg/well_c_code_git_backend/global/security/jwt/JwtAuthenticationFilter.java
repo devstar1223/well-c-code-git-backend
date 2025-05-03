@@ -28,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final UserService userService;
     private final ObjectMapper objectMapper;
+    private final JwtProperties jwtProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -35,45 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws IOException {
         try {
             String requestURI = request.getRequestURI();
-            System.out.println(requestURI);
 
-            //TODO. 리팩토링(임시구현)
-            if (requestURI.startsWith("/api/oauth") ||
-                    requestURI.startsWith("/h2-console/") ||
-                    requestURI.startsWith("/api/wccgrepository/repositories") ||
-                    requestURI.startsWith("/api/swagger-ui/") ||
-                    requestURI.startsWith("/api/v3/api-docs") ||
-                    requestURI.startsWith("/test") ||
-                    requestURI.startsWith(("/api/status"))
-            ) {
+            if (isExcludePath(requestURI)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            String authHeader = request.getHeader("Authorization");
-
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                throw new BadCredentialsException("Authorization 헤더가 없거나 올바르지 않습니다.");
-            }
-
-            String jwt = authHeader.substring(7);
-
-            if (!jwtProvider.validateToken(jwt)) {
-                throw new BadCredentialsException("유효하지 않은 토큰입니다.");
-            }
-
-            Long userId = jwtProvider.getUserId(jwt);
-            User user = userService.getUserById(userId)
-                    .orElseThrow(() -> new UsernameNotFoundException("해당 id를 가진 이용자가 없습니다."));
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()))
-                    );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = resolveToken(request);
+            validateToken(token);
+            User user = getAuthenticatedUser(token);
+            setAuthentication(user);
 
             filterChain.doFilter(request, response);
 
@@ -101,5 +73,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String responseBody = objectMapper.writeValueAsString(apiResponse);
         response.getWriter().write(responseBody);
+    }
+
+    private boolean isExcludePath(String requestURI) {
+        return jwtProperties.getExcludePaths().stream()
+                .anyMatch(requestURI::startsWith);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new BadCredentialsException("Authorization 헤더가 없거나 올바르지 않습니다.");
+        }
+        return authHeader.substring(7);
+    }
+
+    private void validateToken(String token) {
+        if (!jwtProvider.validateToken(token)) {
+            throw new BadCredentialsException("유효하지 않은 토큰입니다.");
+        }
+    }
+
+    private User getAuthenticatedUser(String token) {
+        Long userId = jwtProvider.getUserId(token);
+        return userService.getUserById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 id를 가진 이용자가 없습니다."));
+    }
+
+    private void setAuthentication(User user) {
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole()))
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
