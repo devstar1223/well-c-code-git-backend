@@ -9,6 +9,6 @@ public class RandomNumberGenerator {
     }
 
     public static int generate(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 }
