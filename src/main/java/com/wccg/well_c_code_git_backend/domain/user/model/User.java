@@ -58,21 +58,23 @@ public class User extends BaseEntity {
     private final List<Commit> commits = new ArrayList<>();
 
     @Builder
-    private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
+    private User(Long githubId, String githubLoginId, String name, String nickname, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
         this.githubId = githubId;
         this.githubLoginId = githubLoginId;
         this.name = name;
+        this.nickname = nickname;
         this.introduce = introduce;
         this.profileImageUrl = profileImageUrl;
         this.userRole = userRole;
         this.isActive = isActive;
     }
 
-    public static User of(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive){
+    public static User of(Long githubId, String githubLoginId, String name, String nickname, String introduce, String profileImageUrl, UserRole userRole, boolean isActive){
         return User.builder()
                 .githubId(githubId)
                 .githubLoginId(githubLoginId)
                 .name(name)
+                .nickname(nickname)
                 .introduce(introduce)
                 .profileImageUrl(profileImageUrl)
                 .userRole(userRole)

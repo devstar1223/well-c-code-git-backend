@@ -80,6 +80,8 @@ public class GithubOAuthService {
                 response.getId(),
                 response.getLogin(),
                 response.getName(),
+                // TODO. 닉네임 랜덤 생성으로 변경
+                "랜덤한닉네임123",
                 response.getBio(),
                 response.getAvatarUrl(),
                 UserRole.USER,
