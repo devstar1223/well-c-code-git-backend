@@ -1,6 +1,7 @@
 package com.wccg.well_c_code_git_backend.global.security.oauth.controller;
 
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
+import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.service.GithubOAuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,10 +29,13 @@ public class GithubOAuthController {
                     """
     )
     @GetMapping("/login/github")
-    public ResponseEntity<ApiResponse> getGithubLoginUrl() {
+    public ResponseEntity<ApiResponse<GithubLoginUrlResponse>> getGithubLoginUrl() {
+
+        GithubLoginUrlResponse githubLoginUrlResponse = githubOAuthService.createLoginUrl();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.ok(githubOAuthService.createLoginUrl(),"GitHub 로그인 URL 발급 완료"));
+                .body(ApiResponse.ok(githubLoginUrlResponse,"GitHub 로그인 URL 발급 완료"));
     }
 
     @Operation(
@@ -49,7 +53,7 @@ public class GithubOAuthController {
                     """
     )
     @GetMapping("/callback/github")
-    public ResponseEntity<ApiResponse> githubCallback(@RequestParam("code") String code) {
+    public ResponseEntity<ApiResponse<LoginResponse>> githubCallback(@RequestParam("code") String code) {
         LoginResponse loginResponse = githubOAuthService.processGithubCallback(code);
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -15,7 +15,7 @@ public final class WccgRepositoryDtoMapper {
 
     }
 
-    public static SyncWccgRepositoryResponse toSyncResponse(ServiceSyncWccgRepositoryResponse serviceResponse) {
+    public static SyncWccgRepositoryResponse toSyncWccgRepositoryResponse(ServiceSyncWccgRepositoryResponse serviceResponse) {
         return new SyncWccgRepositoryResponse(serviceResponse.getRepositoryCount());
     }
 

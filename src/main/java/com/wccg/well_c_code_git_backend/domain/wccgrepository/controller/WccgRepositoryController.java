@@ -1,6 +1,8 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.controller;
 
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.controller.response.GetRepositoriesResponse;
+import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.controller.response.SyncWccgRepositoryResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceGetRepositoriesResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.dto.service.response.ServiceSyncWccgRepositoryResponse;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toGetRepositoriesResponse;
-import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toSyncResponse;
+import static com.wccg.well_c_code_git_backend.domain.wccgrepository.mapper.WccgRepositoryDtoMapper.toSyncWccgRepositoryResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,12 +43,12 @@ public class WccgRepositoryController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<ApiResponse> syncWccgRepository(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse<SyncWccgRepositoryResponse>> syncWccgRepository(@AuthenticationPrincipal User user) {
         ServiceSyncWccgRepositoryResponse serviceResponse = wccgRepositoryService.syncWccgRepositoryFor(user);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.ok(toSyncResponse(serviceResponse),"이용자 GitHub 리포지토리 동기화 및 저장 완료"));
+                .body(ApiResponse.ok(toSyncWccgRepositoryResponse(serviceResponse),"이용자 GitHub 리포지토리 동기화 및 저장 완료"));
     }
 
 
@@ -73,7 +75,7 @@ public class WccgRepositoryController {
                     → 스타 수 기준 내림차순으로 정렬된 리포지토리 목록을 반환합니다.
                     """
     )
-    public ResponseEntity<ApiResponse> getRepositories(
+    public ResponseEntity<ApiResponse<List<GetRepositoriesResponse>>> getRepositories(
             @RequestParam(name = "sort", defaultValue = "githubCreatedAt") String sortBy,
             @RequestParam(name = "order", defaultValue = "desc") String order,
             @RequestParam(name = "userId") Long userId
