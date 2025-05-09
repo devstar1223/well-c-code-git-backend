@@ -12,6 +12,7 @@ public class UserSaveRequest {
     private final Long githubId;
     private final String githubLoginId;
     private final String name;
+    private final String nickname;
     private final String introduce;
     private final String profileImageUrl;
     private final UserRole userRole;
