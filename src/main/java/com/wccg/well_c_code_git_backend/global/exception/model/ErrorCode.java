@@ -11,6 +11,9 @@ public enum ErrorCode {
     USER_MISMATCH(HttpStatus.FORBIDDEN, "E003", "인증된 사용자 정보와 요청한 사용자 정보가 일치하지 않습니다."),
     INVALID_SORT_PARAMETER(HttpStatus.BAD_REQUEST, "E004", "해당 정렬 타입이 존재하지 않습니다."),
     S3_FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E005", "S3 파일 업로드 중 오류가 발생했습니다."),
+    INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "E006", "허용되지 않은 파일 형식입니다. (jpg, png, webp만 가능)"),
+    IMAGE_TOO_LARGE(HttpStatus.BAD_REQUEST, "E007", "파일 크기가 15MB를 초과했습니다."),
+    INVALID_IMAGE_DIMENSIONS(HttpStatus.BAD_REQUEST, "E008", "이미지 크기는 반드시 100*100 이어야 합니다."),
     FOR_TEST_ERROR(HttpStatus.BAD_REQUEST, "E777", "테스트용 에러 코드");
 
     private final HttpStatus status;
