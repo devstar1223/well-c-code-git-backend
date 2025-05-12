@@ -9,6 +9,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
@@ -21,22 +22,41 @@ public class S3Uploader {
 
     public String upload(MultipartFile file,UploadFileType fileType){
         try {
-            String fileName = fileType.getDefaultPrefix() + UUID.randomUUID();
+            String extension = getFileExtension(file);
 
-            PutObjectRequest request = PutObjectRequest.builder()
-                    .bucket(s3Properties.getBucketName())
-                    .key(fileName)
-                    .contentType(file.getContentType())
-                    .build();
+            String fileName = createFileName(fileType, extension);
 
-            s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            uploadToS3(file, fileName);
 
-            return "https://" + s3Properties.getBucketName() + ".s3.amazonaws.com/" + fileName;
+            return createFileUrl(fileName);
         }
         catch (Exception e){
             log.error("S3 업로드 실패 : ", e);
             throw new S3FileUploadFailedException();
         }
+    }
+
+    private String getFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        return originalFilename.substring(originalFilename.lastIndexOf("."));
+    }
+
+    private String createFileName(UploadFileType fileType, String extension) {
+        return fileType.getDefaultPrefix() + UUID.randomUUID() + extension;
+    }
+
+    private void uploadToS3(MultipartFile file, String fileName) throws IOException {
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(s3Properties.getBucketName())
+                .key(fileName)
+                .contentType(file.getContentType())
+                .build();
+
+        s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+    }
+
+    private String createFileUrl(String fileName) {
+        return "https://" + s3Properties.getBucketName() + ".s3.amazonaws.com/" + fileName;
     }
 }
 
