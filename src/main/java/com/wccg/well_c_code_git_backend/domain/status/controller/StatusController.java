@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.status.controller;
 
+import com.wccg.well_c_code_git_backend.domain.status.dto.controller.response.GetStatusResponse;
 import com.wccg.well_c_code_git_backend.domain.status.dto.service.response.ServiceGetStatusResponse;
 import com.wccg.well_c_code_git_backend.domain.status.service.StatusService;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -34,7 +35,7 @@ public class StatusController {
                     - 총 커밋(commit) 개수
                     """
     )
-    public ResponseEntity<ApiResponse> getStatus(
+    public ResponseEntity<ApiResponse<GetStatusResponse>> getStatus(
             @RequestParam(name = "userId") Long userId) {
 
         ServiceGetStatusResponse serviceGetStatusResponse = statusService.getStatusBy(userId);

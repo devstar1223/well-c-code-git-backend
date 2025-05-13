@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.branch.controller;
 
+import com.wccg.well_c_code_git_backend.domain.branch.dto.controller.response.SyncBranchResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.dto.service.response.ServiceSyncBranchResponse;
 import com.wccg.well_c_code_git_backend.domain.branch.service.BranchService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
@@ -40,7 +41,7 @@ public class BranchController {
                     """,
             security = @SecurityRequirement(name = "JWT")
     )
-    public ResponseEntity<ApiResponse> syncBranch(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse<SyncBranchResponse>> syncBranch(@AuthenticationPrincipal User user) {
 
         ServiceSyncBranchResponse serviceResponse = branchService.syncBranchFor(user);
 

@@ -9,11 +9,11 @@ public final class CommitDtoMapper {
 
     }
 
-    public static SyncCommitResponse toSyncResponse(ServiceSyncCommitResponse serviceSyncCommitResponse){
+    public static SyncCommitResponse toSyncCommitResponse(ServiceSyncCommitResponse serviceSyncCommitResponse){
         return new SyncCommitResponse(serviceSyncCommitResponse.getCommitCount());
     }
 
-    public static ServiceSyncCommitResponse toServiceSyncResponse(int commitCount){
+    public static ServiceSyncCommitResponse toServiceSyncCommitResponse(int commitCount){
         return new ServiceSyncCommitResponse(commitCount);
     }
 }

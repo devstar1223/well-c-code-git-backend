@@ -19,6 +19,7 @@ public class UserService {
                 request.getGithubId(),
                 request.getGithubLoginId(),
                 request.getName(),
+                request.getNickname(),
                 request.getIntroduce(),
                 request.getProfileImageUrl(),
                 request.getUserRole(),
@@ -28,11 +29,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserByGithubId(Long githubId){
+    public Optional<User> getUserByGithubId(Long githubId) {
         return userRepository.findByGithubId(githubId);
     }
 
-    public Optional<User> getUserById(Long id){
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 }

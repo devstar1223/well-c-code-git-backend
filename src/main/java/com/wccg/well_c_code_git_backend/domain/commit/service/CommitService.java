@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.wccg.well_c_code_git_backend.domain.commit.mapper.CommitDtoMapper.toServiceSyncResponse;
+import static com.wccg.well_c_code_git_backend.domain.commit.mapper.CommitDtoMapper.toServiceSyncCommitResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class CommitService {
 
         int count = syncCommitsForAllRepositories(repositories, accessTokenValue, owner);
 
-        return toServiceSyncResponse(count);
+        return toServiceSyncCommitResponse(count);
     }
 
     public List<Commit> getAllCommitByUserId(Long userId){
