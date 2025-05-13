@@ -33,7 +33,7 @@ public class UserController {
     )
     public ResponseEntity<ApiResponse<NicknameAvaliableCheckResponse>> nicknameAvailableCheck(@RequestParam String nickname) {
 
-        ServiceNicknameAvailableCheckResponse serviceResponse = userService.nicknameAvailableCheck(toServiceNicknameAvailableCheckRequest(nickname));
+        ServiceNicknameAvailableCheckResponse serviceResponse = userProfileService.nicknameAvailableCheck(toServiceNicknameAvailableCheckRequest(nickname));
 
         return ResponseEntity
                 .status(HttpStatus.OK)

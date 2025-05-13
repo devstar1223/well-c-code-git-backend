@@ -1,9 +1,10 @@
 package com.wccg.well_c_code_git_backend.domain.user.service;
 
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.ImageTooLarge;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.InvalidImageDimensions;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.InvalidImageExtension;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.S3FileUploadFailedException;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.ServiceNicknameAvailableCheckRequest;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceNicknameAvailableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.domain.user.repository.UserRepository;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
 import com.wccg.well_c_code_git_backend.global.s3.S3Uploader;
 import com.wccg.well_c_code_git_backend.global.s3.UploadFileType;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +14,36 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Optional;
+
+import static com.wccg.well_c_code_git_backend.domain.user.mapper.UserDtoMapper.toServiceNicknameAvailableCheckResponse;
 
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
 
     private final S3Uploader s3Uploader;
+    private final UserRepository userRepository;
+
+    public ServiceNicknameAvailableCheckResponse nicknameAvailableCheck(ServiceNicknameAvailableCheckRequest request) {
+        String nickname = request.getNickname();
+        nicknameLengthValidate(nickname);
+        nicknameConflictValidate(nickname);
+        return toServiceNicknameAvailableCheckResponse(true,nickname);
+    }
+
+    private void nicknameConflictValidate(String nickname) {
+        Optional<User> optionalUser = userRepository.findByNickname(nickname);
+        if(optionalUser.isPresent()){
+            throw new NicknameConflictException();
+        }
+    }
+
+    private void nicknameLengthValidate(String nickname) {
+        if(nickname.length() < 2 || nickname.length() > 12){
+            throw new NicknameLengthInvalidException();
+        }
+    }
 
     public String profilePhotoUpload(MultipartFile profilePhotoFile) {
 
