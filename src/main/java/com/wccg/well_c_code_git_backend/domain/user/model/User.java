@@ -14,7 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = {
+                @Index(columnList = "nickname, is_active")
+        }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
@@ -31,6 +36,9 @@ public class User extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 39)
     private String name;
+
+    @Column(name = "nickname", nullable = false, length = 12, unique = true)
+    private String nickname;
 
     @Column(name = "introduce",length = 200)
     private String introduce;
@@ -55,21 +63,23 @@ public class User extends BaseEntity {
     private final List<Commit> commits = new ArrayList<>();
 
     @Builder
-    private User(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
+    private User(Long githubId, String githubLoginId, String name, String nickname, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
         this.githubId = githubId;
         this.githubLoginId = githubLoginId;
         this.name = name;
+        this.nickname = nickname;
         this.introduce = introduce;
         this.profileImageUrl = profileImageUrl;
         this.userRole = userRole;
         this.isActive = isActive;
     }
 
-    public static User of(Long githubId, String githubLoginId, String name, String introduce, String profileImageUrl, UserRole userRole, boolean isActive){
+    public static User of(Long githubId, String githubLoginId, String name, String nickname, String introduce, String profileImageUrl, UserRole userRole, boolean isActive){
         return User.builder()
                 .githubId(githubId)
                 .githubLoginId(githubLoginId)
                 .name(name)
+                .nickname(nickname)
                 .introduce(introduce)
                 .profileImageUrl(profileImageUrl)
                 .userRole(userRole)
