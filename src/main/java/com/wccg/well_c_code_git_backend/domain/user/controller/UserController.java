@@ -2,8 +2,10 @@ package com.wccg.well_c_code_git_backend.domain.user.controller;
 
 import com.wccg.well_c_code_git_backend.domain.user.dto.controller.request.UpdateProfileRequest;
 import com.wccg.well_c_code_git_backend.domain.user.dto.controller.response.NicknameAvaliableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.dto.controller.response.ReadProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.dto.controller.response.UpdateProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceNicknameAvailableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceReadProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceUpdateProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
@@ -90,5 +92,23 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toUpdateProfileResponse(serviceResponse),"프로필 수정 완료"));
+    }
+
+    @GetMapping("/profile")
+    @Operation(
+                summary = "프로필 조회",
+                description = """
+                        다음 정보를 조회합니다.
+                        - 프로필 사진
+                        - 닉네임
+                        - 자기소개 문구
+                        """
+        )
+    public ResponseEntity<ApiResponse<ReadProfileResponse>> readProfile(@RequestParam Long userId){
+        ServiceReadProfileResponse serviceResponse = userProfileService.readProfile(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toReadProfileResponse(serviceResponse),"프로필 조회 완료"));
     }
 }

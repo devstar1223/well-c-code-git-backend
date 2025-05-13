@@ -3,7 +3,9 @@ package com.wccg.well_c_code_git_backend.domain.user.service;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.ServiceNicknameAvailableCheckRequest;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.ServiceUpdateProfileRequest;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceNicknameAvailableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceReadProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceUpdateProfileResponse;
+import com.wccg.well_c_code_git_backend.domain.user.mapper.UserDtoMapper;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.repository.UserRepository;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
@@ -109,5 +111,11 @@ public class UserProfileService {
         if(introduce.length() > 200){
             throw new IntroduceTooLongException();
         }
+    }
+
+    public ServiceReadProfileResponse readProfile(Long userId) {
+        return userRepository.findById(userId)
+                .map(UserDtoMapper::toServiceReadProfileResponse)
+                .orElseThrow(UserNotFoundException::new);
     }
 }
