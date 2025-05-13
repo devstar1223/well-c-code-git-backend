@@ -35,9 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws IOException {
         try {
-            String requestURI = request.getRequestURI();
-
-            if (isExcludePath(requestURI)) {
+            if (isExcludePath(request)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -75,9 +73,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.getWriter().write(responseBody);
     }
 
-    private boolean isExcludePath(String requestURI) {
-        return jwtProperties.getExcludePaths().stream()
-                .anyMatch(requestURI::startsWith);
+    private boolean isExcludePath(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        String method = request.getMethod();
+
+        if (requestURI.startsWith("/api/h2-console/")) {
+            return true;
+        }
+
+        if ("GET".equalsIgnoreCase(method)) {
+            return jwtProperties.getExcludePaths().stream()
+                    .anyMatch(requestURI::startsWith);
+        }
+
+        return false;
     }
 
     private String resolveToken(HttpServletRequest request) {

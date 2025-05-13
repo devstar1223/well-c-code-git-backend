@@ -14,6 +14,7 @@ import com.wccg.well_c_code_git_backend.global.github.dto.GithubAccessTokenRespo
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.GithubLoginUrlResponse;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubUserResponse;
 import com.wccg.well_c_code_git_backend.global.security.oauth.dto.LoginResponse;
+import com.wccg.well_c_code_git_backend.global.util.nickname.NicknameGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class GithubOAuthService {
     private final UserService userService;
     private final AccessTokenService accessTokenService;
     private final JwtProvider jwtProvider;
+    private final NicknameGenerator nicknameGenerator;
 
     public GithubLoginUrlResponse createLoginUrl() {
         String githubAuthorizeUrl = createGithubAuthorizeUrl();
@@ -80,6 +82,7 @@ public class GithubOAuthService {
                 response.getId(),
                 response.getLogin(),
                 response.getName(),
+                nicknameGenerator.generate(),
                 response.getBio(),
                 response.getAvatarUrl(),
                 UserRole.USER,
