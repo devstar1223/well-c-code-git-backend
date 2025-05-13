@@ -1,0 +1,12 @@
+package com.wccg.well_c_code_git_backend.domain.user.dto.service.request;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+@Getter
+@ToString
+@RequiredArgsConstructor
+public class ServiceNicknameAvailableCheckRequest {
+        private final String nickname;
+}
