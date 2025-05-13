@@ -1,7 +1,11 @@
 package com.wccg.well_c_code_git_backend.domain.user.controller;
 
+import com.wccg.well_c_code_git_backend.domain.user.dto.controller.request.UpdateProfileRequest;
 import com.wccg.well_c_code_git_backend.domain.user.dto.controller.response.NicknameAvaliableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.dto.controller.response.UpdateProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceNicknameAvailableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceUpdateProfileResponse;
+import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserProfileService;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -11,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,5 +67,28 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(fileURL,"프로필 사진 파일 업로드 완료"));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/profile")
+    @Operation(
+            summary = "프로필 정보 수정",
+            description = """
+                    **⚠️ 본 API는 JWT 인증이 필요하며, 사용자 권한(`ROLE_USER`)이 요구됩니다.**
+                    
+                    다음 정보를 수정합니다.
+                    - 프로필 사진
+                    - 닉네임
+                    - 자기소개 문구
+                    """,
+            security = @SecurityRequirement(name = "JWT")
+    )
+    public ResponseEntity<ApiResponse<UpdateProfileResponse>> updateProfile(@AuthenticationPrincipal User user, @RequestBody UpdateProfileRequest request){
+
+        ServiceUpdateProfileResponse serviceResponse = userProfileService.updateProfile(user,toServiceUpdateProfileRequest(request));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toUpdateProfileResponse(serviceResponse),"프로필 수정 완료"));
     }
 }

@@ -1,12 +1,15 @@
 package com.wccg.well_c_code_git_backend.domain.user.service;
 
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.ServiceNicknameAvailableCheckRequest;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.request.ServiceUpdateProfileRequest;
 import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceNicknameAvailableCheckResponse;
+import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.ServiceUpdateProfileResponse;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.repository.UserRepository;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
 import com.wccg.well_c_code_git_backend.global.s3.S3Uploader;
 import com.wccg.well_c_code_git_backend.global.s3.UploadFileType;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static com.wccg.well_c_code_git_backend.domain.user.mapper.UserDtoMapper.toServiceNicknameAvailableCheckResponse;
+import static com.wccg.well_c_code_git_backend.domain.user.mapper.UserDtoMapper.toServiceUpdateProfileResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +31,13 @@ public class UserProfileService {
 
     public ServiceNicknameAvailableCheckResponse nicknameAvailableCheck(ServiceNicknameAvailableCheckRequest request) {
         String nickname = request.getNickname();
+        nicknameValidate(nickname);
+        return toServiceNicknameAvailableCheckResponse(true,nickname);
+    }
+
+    private void nicknameValidate(String nickname) {
         nicknameLengthValidate(nickname);
         nicknameConflictValidate(nickname);
-        return toServiceNicknameAvailableCheckResponse(true,nickname);
     }
 
     private void nicknameConflictValidate(String nickname) {
@@ -77,6 +85,29 @@ public class UserProfileService {
         String originalFilename = profilePhotoFile.getOriginalFilename();
         if (originalFilename == null || !originalFilename.matches("(?i)^.+\\.(jpg|png|webp)$")) {
             throw new InvalidImageExtension();
+        }
+    }
+
+    @Transactional
+    public ServiceUpdateProfileResponse updateProfile(User user, ServiceUpdateProfileRequest serviceUpdateProfileRequest) {
+        String nickname = serviceUpdateProfileRequest.getNickname();
+        nicknameValidate(nickname);
+
+        String introduce = serviceUpdateProfileRequest.getIntroduce();
+        introduceLengthValidate(introduce);
+
+        String imageURL = serviceUpdateProfileRequest.getProfileImageUrl();
+
+        user.updateProfile(nickname,introduce,imageURL);
+
+        userRepository.save(user);
+
+        return toServiceUpdateProfileResponse(user);
+    }
+
+    private void introduceLengthValidate(String introduce) {
+        if(introduce.length() > 200){
+            throw new IntroduceTooLongException();
         }
     }
 }

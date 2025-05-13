@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "E008", "허용되지 않은 파일 형식입니다. (jpg, png, webp만 가능)"),
     IMAGE_TOO_LARGE(HttpStatus.BAD_REQUEST, "E009", "파일 크기가 15MB를 초과했습니다."),
     INVALID_IMAGE_DIMENSIONS(HttpStatus.BAD_REQUEST, "E010", "이미지 크기는 반드시 100*100 이어야 합니다."),
+    INTRODUCE_TOO_LONG(HttpStatus.BAD_REQUEST, "E011", "자기소개는 200자를 초과할 수 없습니다."),
     FOR_TEST_ERROR(HttpStatus.BAD_REQUEST, "E777", "테스트용 에러 코드");
 
     private final HttpStatus status;

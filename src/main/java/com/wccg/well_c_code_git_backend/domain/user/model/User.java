@@ -101,4 +101,10 @@ public class User extends BaseEntity {
         commits.add(commit);
         commit.setUser(this);
     }
+
+    public void updateProfile(String nickname, String introduce, String profileImageUrl) {
+            this.nickname = nickname;
+            this.introduce = introduce;
+            this.profileImageUrl = profileImageUrl;
+    }
 }
