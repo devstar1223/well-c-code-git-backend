@@ -17,6 +17,8 @@ public enum ErrorCode {
     IMAGE_TOO_LARGE(HttpStatus.BAD_REQUEST, "E009", "파일 크기가 15MB를 초과했습니다."),
     INVALID_IMAGE_DIMENSIONS(HttpStatus.BAD_REQUEST, "E010", "이미지 크기는 반드시 100*100 이어야 합니다."),
     INTRODUCE_TOO_LONG(HttpStatus.BAD_REQUEST, "E011", "자기소개는 200자를 초과할 수 없습니다."),
+    TEAM_NAME_CONFLICT(HttpStatus.CONFLICT,"E012","중복된 팀 이름 입니다."),
+    TEAM_NAME_LENGTH_INVALID(HttpStatus.BAD_REQUEST, "E013", "팀 이름은 2글자 이상 12글자 이하만 가능합니다."),
     FOR_TEST_ERROR(HttpStatus.BAD_REQUEST, "E777", "테스트용 에러 코드");
 
     private final HttpStatus status;

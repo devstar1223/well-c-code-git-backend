@@ -2,10 +2,7 @@ package com.wccg.well_c_code_git_backend.domain.team.model;
 
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
@@ -38,4 +35,19 @@ public class TeamUsers {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+
+    @Builder
+    private TeamUsers(JoinStatus joinStatus, String joinIntroduce, boolean isActive) {
+        this.joinStatus = joinStatus;
+        this.joinIntroduce = joinIntroduce;
+        this.isActive = isActive;
+    }
+
+    public static TeamUsers of(JoinStatus joinStatus, String joinIntroduce, boolean isActive){
+        return TeamUsers.builder()
+                .joinStatus(joinStatus)
+                .joinIntroduce(joinIntroduce)
+                .isActive(isActive)
+                .build();
+    }
 }
