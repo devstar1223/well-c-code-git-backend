@@ -1,7 +1,9 @@
 package com.wccg.well_c_code_git_backend.domain.team.service;
 
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.CreateTeamRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.model.JoinStatus;
 import com.wccg.well_c_code_git_backend.domain.team.model.Team;
 import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
@@ -10,10 +12,13 @@ import com.wccg.well_c_code_git_backend.domain.team.repository.TeamUsersReposito
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNameConflictException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNameLengthInvalidException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.toServiceCreateTeamResponse;
+import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.toServiceJoinTeamRequestResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamUsersRepository teamUsersRepository;
 
+    @Transactional
     public ServiceCreateTeamResponse createTeam(User user, CreateTeamRequest request) {
         String teamName = request.getName();
         teamNameValidate(teamName);
@@ -79,4 +85,28 @@ public class TeamService {
     }
 
 
+    @Transactional
+    public ServiceJoinTeamRequestResponse joinTeamRequest(User user, ServiceJoinTeamRequestRequest request) {
+
+        TeamUsers newTeamUsers = buildTeamUsers(request);
+        createTeamUsersRelationFromJoinRequest(user, request, newTeamUsers);
+        teamUsersRepository.save(newTeamUsers);
+        return toServiceJoinTeamRequestResponse(newTeamUsers);
+    }
+
+    private void createTeamUsersRelationFromJoinRequest(User user, ServiceJoinTeamRequestRequest request, TeamUsers newTeamUsers) {
+        newTeamUsers.setUser(user);
+        Long teamId = request.getTeamId();
+        Team joinTeam = teamRepository.findById(teamId)
+                .orElseThrow(TeamNotFoundException::new);
+        newTeamUsers.setTeam(joinTeam);
+    }
+
+    private TeamUsers buildTeamUsers(ServiceJoinTeamRequestRequest request) {
+        return TeamUsers.of(
+                JoinStatus.PENDING,
+                request.getJoinIntroduce(),
+                true
+        );
+    }
 }
