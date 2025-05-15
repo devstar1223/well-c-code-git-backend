@@ -20,6 +20,7 @@ public enum ErrorCode {
     TEAM_NAME_CONFLICT(HttpStatus.CONFLICT,"E012","중복된 팀 이름 입니다."),
     TEAM_NAME_LENGTH_INVALID(HttpStatus.BAD_REQUEST, "E013", "팀 이름은 2글자 이상 12글자 이하만 가능합니다."),
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "E014", "해당 팀을 찾을 수 없습니다."),
+    TEAM_APPLICANT_FORBIDDEN(HttpStatus.FORBIDDEN, "E015", "해당 팀의 신청 목록을 조회할 권한이 없습니다."),
     FOR_TEST_ERROR(HttpStatus.BAD_REQUEST, "E777", "테스트용 에러 코드");
 
     private final HttpStatus status;

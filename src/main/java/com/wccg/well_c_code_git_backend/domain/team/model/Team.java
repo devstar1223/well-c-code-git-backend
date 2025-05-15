@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.team.model;
 
+import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @Table(indexes = {
 //        @Index(columnList = "name, is_active")
 })
-public class Team {
+public class Team extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

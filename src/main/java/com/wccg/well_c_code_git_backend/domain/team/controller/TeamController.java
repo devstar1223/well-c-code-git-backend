@@ -4,12 +4,12 @@ import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.Creat
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.JoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.service.TeamService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,10 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
 
@@ -31,7 +30,6 @@ import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
 public class TeamController {
 
     private final TeamService teamService;
-    private final UserService userService;
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("")
@@ -75,4 +73,24 @@ public class TeamController {
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toJoinTeamRequestResponse(serviceResponse),"팀 가입 요청 완료"));
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/join-request")
+    @Operation(
+            summary = "팀 가입 요청 목록 조회",
+            description = """
+                            **⚠️ 본 API는 JWT 인증이 필요하며, 사용자 권한(`ROLE_USER`)이 요구됩니다.**
+                            - 현재 로그인한 관리자가 속한 팀의 가입 요청 목록을 조회합니다.
+                            - 가입 요청은 최신순(요청일 기준 내림차순)으로 정렬되어 반환됩니다.
+                            """,
+            security = @SecurityRequirement(name = "JWT")
+    )
+    public ResponseEntity<ApiResponse<List<ReadJoinTeamRequestResponse>>> readJoinTeamRequest(@AuthenticationPrincipal User user, @RequestParam Long teamId) {
+        List<ServiceReadJoinTeamRequestResponse> serviceResponseList = teamService.readJoinTeamRequest(user, teamId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toReadJoinTeamRequestResponseList(serviceResponseList), "가입 요청 목록 조회 완료"));
+    }
+
 }

@@ -4,12 +4,18 @@ import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.Creat
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.JoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceCreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.model.Team;
 import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class TeamMapper {
     private TeamMapper(){
@@ -59,5 +65,27 @@ public final class TeamMapper {
                 serviceResponse.getTeamName(),
                 serviceResponse.getJoinStatusDescription()
         );
+    }
+
+    public static ServiceReadJoinTeamRequestResponse toServiceReadJoinTeamRequestResponse(TeamUsers teamUsers){
+        return new ServiceReadJoinTeamRequestResponse(
+                teamUsers.getUser().getId(),
+                teamUsers.getUser().getNickname(),
+                teamUsers.getJoinIntroduce(),
+                teamUsers.getUser().getProfileImageUrl(),
+                teamUsers.getJoinStatus().getDescription()
+        );
+    }
+
+    public static List<ReadJoinTeamRequestResponse> toReadJoinTeamRequestResponseList(List<ServiceReadJoinTeamRequestResponse> serviceResponselist) {
+        return serviceResponselist.stream()
+                .map(serviceResponse -> new ReadJoinTeamRequestResponse(
+                        serviceResponse.getUserId(),
+                        serviceResponse.getNickname(),
+                        serviceResponse.getJoinIntroduce(),
+                        serviceResponse.getProfileImageUrl(),
+                        serviceResponse.getJoinStatusDescription()
+                ))
+                .toList();
     }
 }

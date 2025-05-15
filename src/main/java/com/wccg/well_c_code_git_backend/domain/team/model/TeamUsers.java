@@ -1,5 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.team.model;
 
+import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,9 +9,10 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {
-        @Index(columnList = "team_id, is_active")
+        @Index(columnList = "team_id, is_active"),
+        @Index(columnList = "team_id, is_active, created_at")
 })
-public class TeamUsers {
+public class TeamUsers extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

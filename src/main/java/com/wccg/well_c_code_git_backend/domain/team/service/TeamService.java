@@ -4,12 +4,15 @@ import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.Creat
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper;
 import com.wccg.well_c_code_git_backend.domain.team.model.JoinStatus;
 import com.wccg.well_c_code_git_backend.domain.team.model.Team;
 import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamUsersRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamApplicantForbiddenException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNameConflictException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNameLengthInvalidException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNotFoundException;
@@ -17,8 +20,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.toServiceCreateTeamResponse;
-import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.toServiceJoinTeamRequestResponse;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +37,7 @@ public class TeamService {
         String teamName = request.getName();
         teamNameValidate(teamName);
 
-        Team newTeam = buildTeamFromRequest(request,user);
+        Team newTeam = buildTeamFromRequest(request, user);
         teamRepository.save(newTeam);
 
         createTeamUsersRelationFromTeamLeader(newTeam);
@@ -56,7 +61,7 @@ public class TeamService {
         return teamUsers;
     }
 
-    private Team buildTeamFromRequest(CreateTeamRequest request,User user) {
+    private Team buildTeamFromRequest(CreateTeamRequest request, User user) {
         Team team = Team.of(
                 request.getName(),
                 request.getIntroduce(),
@@ -73,7 +78,7 @@ public class TeamService {
     }
 
     private void teamNameLengthValidate(String teamName) {
-        if(teamName.length() < 2 || teamName.length() > 12){
+        if (teamName.length() < 2 || teamName.length() > 12) {
             throw new TeamNameLengthInvalidException();
         }
     }
@@ -108,5 +113,33 @@ public class TeamService {
                 request.getJoinIntroduce(),
                 true
         );
+    }
+
+    public List<ServiceReadJoinTeamRequestResponse> readJoinTeamRequest(User user, Long teamId) {
+        Team team = teamNotFoundValidate(teamId);
+        teamLeaderValidate(user, team);
+        List<TeamUsers> teamUsers = getActiveTeamUsers(teamId);
+        return mapToServiceResponses(teamUsers);
+    }
+
+    private void teamLeaderValidate(User user, Team team) {
+        if (!user.getId().equals(team.getLeader().getId())) {
+            throw new TeamApplicantForbiddenException();
+        }
+    }
+
+    private Team teamNotFoundValidate(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(TeamNotFoundException::new);
+    }
+
+    private List<TeamUsers> getActiveTeamUsers(Long teamId) {
+        return teamUsersRepository.findAllByTeamIdAndIsActiveTrueOrderByCreatedAtDesc(teamId);
+    }
+
+    private List<ServiceReadJoinTeamRequestResponse> mapToServiceResponses(List<TeamUsers> teamUsersList) {
+        return teamUsersList.stream()
+                .map(TeamMapper::toServiceReadJoinTeamRequestResponse)
+                .toList();
     }
 }
