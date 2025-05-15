@@ -2,6 +2,7 @@ package com.wccg.well_c_code_git_backend.domain.team.controller;
 
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.CreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.JoinTeamRequestRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.RespondJoinTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
@@ -93,4 +94,22 @@ public class TeamController {
                 .body(ApiResponse.ok(toReadJoinTeamRequestResponseList(serviceResponseList), "가입 요청 목록 조회 완료"));
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/join-request")
+    @Operation(
+            summary = "팀 가입 요청 수락/거절",
+            description = """
+                            **⚠️ 본 API는 JWT 인증이 필요하며, 사용자 권한(`ROLE_USER`)이 요구됩니다.**
+                            - 현재 로그인한 팀의 관리자가 팀 가입 요청을 수락 또는 거절합니다.
+                            """,
+            security = @SecurityRequirement(name = "JWT")
+    )
+    public ResponseEntity<ApiResponse<Void>> respondJoinTeamRequest(@AuthenticationPrincipal User user, @RequestBody RespondJoinTeamRequest request){
+
+        teamService.respondJoinTeamRequest(user,request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(null, "팀 가입 요청 수락/거절 완료"));
+    }
 }

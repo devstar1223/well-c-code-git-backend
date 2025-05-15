@@ -1,6 +1,7 @@
 package com.wccg.well_c_code_git_backend.domain.team.service;
 
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.CreateTeamRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.RespondJoinTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
@@ -12,15 +13,11 @@ import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamUsersRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamApplicantForbiddenException;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNameConflictException;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNameLengthInvalidException;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.TeamNotFoundException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
@@ -141,5 +138,22 @@ public class TeamService {
         return teamUsersList.stream()
                 .map(TeamMapper::toServiceReadJoinTeamRequestResponse)
                 .toList();
+    }
+
+    public void respondJoinTeamRequest(User user, RespondJoinTeamRequest request) {
+        TeamUsers teamUsers = teamUsersNotFoundValidate(request);
+
+        Team team = teamNotFoundValidate(teamUsers.getTeam().getId());
+
+        teamLeaderValidate(user, team);
+
+        TeamUsers newTeamUsers = teamUsers.approveJoinRequest(request.isAccepted());
+
+        teamUsersRepository.save(newTeamUsers);
+    }
+
+    private TeamUsers teamUsersNotFoundValidate(RespondJoinTeamRequest request) {
+        return teamUsersRepository.findById(request.getTeamUsersId())
+                .orElseThrow(TeamJoinRequestNotFound::new);
     }
 }
