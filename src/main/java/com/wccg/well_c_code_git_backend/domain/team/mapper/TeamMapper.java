@@ -2,16 +2,16 @@ package com.wccg.well_c_code_git_backend.domain.team.mapper;
 
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.CreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.JoinTeamRequestRequest;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.UpdateTeamRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.*;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceCreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceReadTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceUpdateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceUpdateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.model.Team;
 import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 
@@ -108,6 +108,34 @@ public final class TeamMapper {
                 serviceReadTeamResponse.getInfoImageURL(),
                 serviceReadTeamResponse.getTeamMemberCount(),
                 serviceReadTeamResponse.getCreatedAt()
+        );
+    }
+
+    public static ServiceUpdateTeamRequest toServiceUpdateTeamRequest(UpdateTeamRequest request){
+        return new ServiceUpdateTeamRequest(
+                request.getTeamId(),
+                request.getIntroduce(),
+                request.getInfoImageUrl()
+        );
+    }
+
+    public static ServiceUpdateTeamResponse toServiceUpdateTeamResponse(Team team){
+        return new ServiceUpdateTeamResponse(
+                team.getId(),
+                team.getName(),
+                team.getIntroduce(),
+                team.getInfoImageUrl(),
+                team.getUpdatedAt()
+        );
+    }
+
+    public static UpdateTeamResponse toUpdateTeamResponse(ServiceUpdateTeamResponse serviceResponse){
+        return new UpdateTeamResponse(
+                serviceResponse.getTeamId(),
+                serviceResponse.getName(),
+                serviceResponse.getIntroduce(),
+                serviceResponse.getInfoImageUrl(),
+                serviceResponse.getUpdatedAt()
         );
     }
 }

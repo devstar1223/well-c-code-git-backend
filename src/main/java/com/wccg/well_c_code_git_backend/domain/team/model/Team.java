@@ -61,4 +61,9 @@ public class Team extends BaseEntity {
                 .isActive(isActive)
                 .build();
     }
+
+    public void updateTeamInfo(String introduce,String infoImageUrl){
+        this.introduce = introduce;
+        this.infoImageUrl = infoImageUrl;
+    }
 }

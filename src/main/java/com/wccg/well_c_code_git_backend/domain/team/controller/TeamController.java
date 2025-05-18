@@ -3,14 +3,14 @@ package com.wccg.well_c_code_git_backend.domain.team.controller;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.CreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.JoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.RespondJoinTeamRequest;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
-import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.UpdateTeamRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.*;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceReadTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceUpdateTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.team.service.TeamService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -33,6 +33,7 @@ import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamRepository teamRepository;
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("")
@@ -134,5 +135,26 @@ public class TeamController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toReadTeamResponse(serviceResponse),"팀 조회 완료"));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("")
+    @Operation(
+            summary = "팀 수정",
+            description = """
+                            **⚠️ 본 API는 JWT 인증이 필요하며, 사용자 권한(`ROLE_USER`)이 요구됩니다.**
+                            - 현재 로그인한 팀의 관리자가 팀의 정보를 수정합니다.
+                              - 팀 소개
+                              - 팀 정보 사진
+                            - 팀 이름은 변경 불가
+                            """,
+            security = @SecurityRequirement(name = "JWT")
+    )
+    public ResponseEntity<ApiResponse<UpdateTeamResponse>> updateTeam(@AuthenticationPrincipal User user, @RequestBody UpdateTeamRequest request){
+        ServiceUpdateTeamResponse serviceResponse = teamService.updateTeam(user, toServiceUpdateTeamRequest(request));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toUpdateTeamResponse(serviceResponse),"팀 수정 완료"));
     }
 }

@@ -4,9 +4,11 @@ import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.Creat
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.RespondJoinTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceReadTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceUpdateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceUpdateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper;
 import com.wccg.well_c_code_git_backend.domain.team.model.JoinStatus;
 import com.wccg.well_c_code_git_backend.domain.team.model.Team;
@@ -167,5 +169,19 @@ public class TeamService {
     private int getTeamMemberCount(Long teamId) {
         List<TeamUsers> teamUsersList = teamUsersRepository.findAllByTeamIdAndJoinStatusAndIsActiveTrue(teamId, JoinStatus.ACCEPTED);
         return teamUsersList.size();
+    }
+
+    public ServiceUpdateTeamResponse updateTeam(User user, ServiceUpdateTeamRequest serviceRequest) {
+        Team team = teamNotFoundValidate(serviceRequest.getTeamId());
+        teamLeaderValidate(user, team);
+
+        String introduce = serviceRequest.getIntroduce();
+        String infoImageUrl = serviceRequest.getInfoImageUrl();
+
+        team.updateTeamInfo(introduce,infoImageUrl);
+
+        teamRepository.save(team);
+
+        return toServiceUpdateTeamResponse(team);
     }
 }
