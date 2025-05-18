@@ -5,8 +5,10 @@ import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.JoinT
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceCreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceReadTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
@@ -87,5 +89,25 @@ public final class TeamMapper {
                         serviceResponse.getJoinStatusDescription()
                 ))
                 .toList();
+    }
+
+    public static ServiceReadTeamResponse toServiceReadTeamResponse(Team team, int teamMemberCount){
+        return new ServiceReadTeamResponse(
+                team.getName(),
+                team.getIntroduce(),
+                team.getInfoImageUrl(),
+                teamMemberCount,
+                team.getCreatedAt()
+        );
+    }
+
+    public static ReadTeamResponse toReadTeamResponse(ServiceReadTeamResponse serviceReadTeamResponse){
+        return new ReadTeamResponse(
+                serviceReadTeamResponse.getName(),
+                serviceReadTeamResponse.getIntroduce(),
+                serviceReadTeamResponse.getInfoImageURL(),
+                serviceReadTeamResponse.getTeamMemberCount(),
+                serviceReadTeamResponse.getCreatedAt()
+        );
     }
 }

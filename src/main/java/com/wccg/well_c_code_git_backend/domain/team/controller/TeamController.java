@@ -6,6 +6,8 @@ import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.Respo
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.CreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.JoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadJoinTeamRequestResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.controller.response.ReadTeamResponse;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceReadTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
@@ -111,5 +113,26 @@ public class TeamController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(null, "팀 가입 요청 수락/거절 완료"));
+    }
+
+    @GetMapping("")
+    @Operation(
+            summary = "팀 조회(간단)",
+            description = """
+                            - 팀의 정보를 조회합니다. (스탯 제외 간단 버전)
+                              - 팀 이름
+                              - 팀 소개
+                              - 팀 정보 사진
+                              - 팀 인원 수
+                              - 팀 생성일
+                            """
+    )
+    public ResponseEntity<ApiResponse<ReadTeamResponse>> readTeam(@RequestParam Long teamId){
+
+        ServiceReadTeamResponse serviceResponse = teamService.readTeam(teamId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toReadTeamResponse(serviceResponse),"팀 조회 완료"));
     }
 }

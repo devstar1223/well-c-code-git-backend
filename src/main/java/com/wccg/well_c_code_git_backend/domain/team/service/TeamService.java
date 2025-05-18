@@ -3,6 +3,7 @@ package com.wccg.well_c_code_git_backend.domain.team.service;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.CreateTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.controller.request.RespondJoinTeamRequest;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceJoinTeamRequestRequest;
+import com.wccg.well_c_code_git_backend.domain.team.dto.service.request.ServiceReadTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceCreateTeamResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceJoinTeamRequestResponse;
 import com.wccg.well_c_code_git_backend.domain.team.dto.service.response.ServiceReadJoinTeamRequestResponse;
@@ -155,5 +156,16 @@ public class TeamService {
     private TeamUsers teamUsersNotFoundValidate(RespondJoinTeamRequest request) {
         return teamUsersRepository.findById(request.getTeamUsersId())
                 .orElseThrow(TeamJoinRequestNotFound::new);
+    }
+
+    public ServiceReadTeamResponse readTeam(Long teamId) {
+        int teamMemberCount = getTeamMemberCount(teamId);
+        Team team = teamNotFoundValidate(teamId);
+        return toServiceReadTeamResponse(team,teamMemberCount);
+    }
+
+    private int getTeamMemberCount(Long teamId) {
+        List<TeamUsers> teamUsersList = teamUsersRepository.findAllByTeamIdAndJoinStatusAndIsActiveTrue(teamId, JoinStatus.ACCEPTED);
+        return teamUsersList.size();
     }
 }
