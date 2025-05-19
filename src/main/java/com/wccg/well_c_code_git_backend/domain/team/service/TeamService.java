@@ -38,8 +38,8 @@ import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
 @Service
 @RequiredArgsConstructor
 public class TeamService {
-
     private final TeamRepository teamRepository;
+
     private final TeamUsersRepository teamUsersRepository;
     private final S3Uploader s3Uploader;
 
@@ -54,6 +54,86 @@ public class TeamService {
         createTeamUsersRelationFromTeamLeader(newTeam);
 
         return toServiceCreateTeamResponse(newTeam);
+    }
+
+    @Transactional
+    public ServiceJoinTeamRequestResponse joinTeamRequest(User user, ServiceJoinTeamRequestRequest request) {
+
+        TeamUsers newTeamUsers = buildTeamUsers(request);
+        createTeamUsersRelationFromJoinRequest(user, request, newTeamUsers);
+        teamUsersRepository.save(newTeamUsers);
+        return toServiceJoinTeamRequestResponse(newTeamUsers);
+    }
+
+    public List<ServiceReadJoinTeamRequestResponse> readJoinTeamRequest(User user, Long teamId) {
+        Team team = teamNotFoundValidate(teamId);
+        teamLeaderValidate(user, team);
+        List<TeamUsers> teamUsers = getActiveTeamUsers(teamId);
+        return mapToServiceResponses(teamUsers);
+    }
+
+    @Transactional
+    public void respondJoinTeamRequest(User user, RespondJoinTeamRequest request) {
+        TeamUsers teamUsers = teamUsersNotFoundValidate(request);
+
+        Team team = teamNotFoundValidate(teamUsers.getTeam().getId());
+
+        teamLeaderValidate(user, team);
+
+        TeamUsers newTeamUsers = teamUsers.approveJoinRequest(request.isAccepted());
+
+        teamUsersRepository.save(newTeamUsers);
+    }
+
+    public ServiceReadTeamResponse readTeam(Long teamId) {
+        int teamMemberCount = getTeamMemberCount(teamId);
+        Team team = teamNotFoundValidate(teamId);
+        return toServiceReadTeamResponse(team,teamMemberCount);
+    }
+
+    @Transactional
+    public String infoPhotoUpload(MultipartFile profilePhotoFile) {
+
+        imageExtensionValidate(profilePhotoFile);
+
+        imageSizeValidate(profilePhotoFile);
+
+        imageDimensionsValidate(profilePhotoFile);
+
+        return s3Uploader.upload(profilePhotoFile, UploadFileType.TEAM_INFO_PHOTO);
+    }
+
+    @Transactional
+    public ServiceUpdateTeamResponse updateTeam(User user, ServiceUpdateTeamRequest serviceRequest) {
+        Team team = teamNotFoundValidate(serviceRequest.getTeamId());
+        teamLeaderValidate(user, team);
+
+        String introduce = serviceRequest.getIntroduce();
+        introduceLengthValidate(introduce);
+        String infoImageUrl = serviceRequest.getInfoImageUrl();
+
+        team.updateTeamInfo(introduce,infoImageUrl);
+
+        teamRepository.save(team);
+
+        return toServiceUpdateTeamResponse(team);
+    }
+
+    private void teamNameValidate(String teamName) {
+        teamNameLengthValidate(teamName);
+        teamNameConflictValidate(teamName);
+    }
+
+    private void teamNameLengthValidate(String teamName) {
+        if (teamName.length() < 2 || teamName.length() > 12) {
+            throw new TeamNameLengthInvalidException();
+        }
+    }
+
+    private void teamNameConflictValidate(String teamName) {
+        if (teamRepository.findByName(teamName).isPresent()) {
+            throw new TeamNameConflictException();
+        }
     }
 
     private void createTeamUsersRelationFromTeamLeader(Team newTeam) {
@@ -83,32 +163,6 @@ public class TeamService {
         return team;
     }
 
-    private void teamNameValidate(String teamName) {
-        teamNameLengthValidate(teamName);
-        teamNameConflictValidate(teamName);
-    }
-
-    private void teamNameLengthValidate(String teamName) {
-        if (teamName.length() < 2 || teamName.length() > 12) {
-            throw new TeamNameLengthInvalidException();
-        }
-    }
-
-    private void teamNameConflictValidate(String teamName) {
-        if (teamRepository.findByName(teamName).isPresent()) {
-            throw new TeamNameConflictException();
-        }
-    }
-
-
-    @Transactional
-    public ServiceJoinTeamRequestResponse joinTeamRequest(User user, ServiceJoinTeamRequestRequest request) {
-
-        TeamUsers newTeamUsers = buildTeamUsers(request);
-        createTeamUsersRelationFromJoinRequest(user, request, newTeamUsers);
-        teamUsersRepository.save(newTeamUsers);
-        return toServiceJoinTeamRequestResponse(newTeamUsers);
-    }
 
     private void createTeamUsersRelationFromJoinRequest(User user, ServiceJoinTeamRequestRequest request, TeamUsers newTeamUsers) {
         newTeamUsers.setUser(user);
@@ -124,13 +178,6 @@ public class TeamService {
                 request.getJoinIntroduce(),
                 true
         );
-    }
-
-    public List<ServiceReadJoinTeamRequestResponse> readJoinTeamRequest(User user, Long teamId) {
-        Team team = teamNotFoundValidate(teamId);
-        teamLeaderValidate(user, team);
-        List<TeamUsers> teamUsers = getActiveTeamUsers(teamId);
-        return mapToServiceResponses(teamUsers);
     }
 
     private void teamLeaderValidate(User user, Team team) {
@@ -154,27 +201,9 @@ public class TeamService {
                 .toList();
     }
 
-    public void respondJoinTeamRequest(User user, RespondJoinTeamRequest request) {
-        TeamUsers teamUsers = teamUsersNotFoundValidate(request);
-
-        Team team = teamNotFoundValidate(teamUsers.getTeam().getId());
-
-        teamLeaderValidate(user, team);
-
-        TeamUsers newTeamUsers = teamUsers.approveJoinRequest(request.isAccepted());
-
-        teamUsersRepository.save(newTeamUsers);
-    }
-
     private TeamUsers teamUsersNotFoundValidate(RespondJoinTeamRequest request) {
         return teamUsersRepository.findById(request.getTeamUsersId())
                 .orElseThrow(TeamJoinRequestNotFoundException::new);
-    }
-
-    public ServiceReadTeamResponse readTeam(Long teamId) {
-        int teamMemberCount = getTeamMemberCount(teamId);
-        Team team = teamNotFoundValidate(teamId);
-        return toServiceReadTeamResponse(team,teamMemberCount);
     }
 
     private int getTeamMemberCount(Long teamId) {
@@ -182,36 +211,10 @@ public class TeamService {
         return teamUsersList.size();
     }
 
-    public ServiceUpdateTeamResponse updateTeam(User user, ServiceUpdateTeamRequest serviceRequest) {
-        Team team = teamNotFoundValidate(serviceRequest.getTeamId());
-        teamLeaderValidate(user, team);
-
-        String introduce = serviceRequest.getIntroduce();
-        introduceLengthValidate(introduce);
-        String infoImageUrl = serviceRequest.getInfoImageUrl();
-
-        team.updateTeamInfo(introduce,infoImageUrl);
-
-        teamRepository.save(team);
-
-        return toServiceUpdateTeamResponse(team);
-    }
-
     private void introduceLengthValidate(String introduce) {
         if(introduce.length() > 200){
             throw new TeamIntroduceTooLongException();
         }
-    }
-
-    public String infoPhotoUpload(MultipartFile profilePhotoFile) {
-
-        imageExtensionValidate(profilePhotoFile);
-
-        imageSizeValidate(profilePhotoFile);
-
-        imageDimensionsValidate(profilePhotoFile);
-
-        return s3Uploader.upload(profilePhotoFile, UploadFileType.TEAM_INFO_PHOTO);
     }
 
     private void imageDimensionsValidate(MultipartFile profilePhotoFile) {
