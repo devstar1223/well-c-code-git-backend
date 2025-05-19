@@ -16,12 +16,11 @@ import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamUsersRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.ImageTooLarge;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageDimensions;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageExtension;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.ImageTooLargeException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageDimensionsException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageExtensionException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.S3FileUploadFailedException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.team.*;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.IntroduceTooLongException;
 import com.wccg.well_c_code_git_backend.global.s3.S3Uploader;
 import com.wccg.well_c_code_git_backend.global.s3.UploadFileType;
 import jakarta.transaction.Transactional;
@@ -169,7 +168,7 @@ public class TeamService {
 
     private TeamUsers teamUsersNotFoundValidate(RespondJoinTeamRequest request) {
         return teamUsersRepository.findById(request.getTeamUsersId())
-                .orElseThrow(TeamJoinRequestNotFound::new);
+                .orElseThrow(TeamJoinRequestNotFoundException::new);
     }
 
     public ServiceReadTeamResponse readTeam(Long teamId) {
@@ -219,7 +218,7 @@ public class TeamService {
         try {
             BufferedImage image = ImageIO.read(profilePhotoFile.getInputStream());
             if (image.getWidth() != 100 || image.getHeight() != 100) {
-                throw new InvalidImageDimensions();
+                throw new InvalidImageDimensionsException();
             }
         } catch (IOException e) {
             throw new S3FileUploadFailedException();
@@ -228,14 +227,14 @@ public class TeamService {
 
     private void imageSizeValidate(MultipartFile profilePhotoFile) {
         if (profilePhotoFile.getSize() > 15 * 1024 * 1024) {
-            throw new ImageTooLarge();
+            throw new ImageTooLargeException();
         }
     }
 
     private void imageExtensionValidate(MultipartFile profilePhotoFile) {
         String originalFilename = profilePhotoFile.getOriginalFilename();
         if (originalFilename == null || !originalFilename.matches("(?i)^.+\\.(jpg|png|webp)$")) {
-            throw new InvalidImageExtension();
+            throw new InvalidImageExtensionException();
         }
     }
 }
