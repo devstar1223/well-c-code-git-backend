@@ -16,11 +16,22 @@ import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamUsersRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.ImageTooLarge;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageDimensions;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageExtension;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.S3FileUploadFailedException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.team.*;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.IntroduceTooLongException;
+import com.wccg.well_c_code_git_backend.global.s3.S3Uploader;
+import com.wccg.well_c_code_git_backend.global.s3.UploadFileType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
 
 import static com.wccg.well_c_code_git_backend.domain.team.mapper.TeamMapper.*;
@@ -31,6 +42,7 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final TeamUsersRepository teamUsersRepository;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public ServiceCreateTeamResponse createTeam(User user, CreateTeamRequest request) {
@@ -176,6 +188,7 @@ public class TeamService {
         teamLeaderValidate(user, team);
 
         String introduce = serviceRequest.getIntroduce();
+        introduceLengthValidate(introduce);
         String infoImageUrl = serviceRequest.getInfoImageUrl();
 
         team.updateTeamInfo(introduce,infoImageUrl);
@@ -183,5 +196,46 @@ public class TeamService {
         teamRepository.save(team);
 
         return toServiceUpdateTeamResponse(team);
+    }
+
+    private void introduceLengthValidate(String introduce) {
+        if(introduce.length() > 200){
+            throw new TeamIntroduceTooLongException();
+        }
+    }
+
+    public String infoPhotoUpload(MultipartFile profilePhotoFile) {
+
+        imageExtensionValidate(profilePhotoFile);
+
+        imageSizeValidate(profilePhotoFile);
+
+        imageDimensionsValidate(profilePhotoFile);
+
+        return s3Uploader.upload(profilePhotoFile, UploadFileType.TEAM_INFO_PHOTO);
+    }
+
+    private void imageDimensionsValidate(MultipartFile profilePhotoFile) {
+        try {
+            BufferedImage image = ImageIO.read(profilePhotoFile.getInputStream());
+            if (image.getWidth() != 100 || image.getHeight() != 100) {
+                throw new InvalidImageDimensions();
+            }
+        } catch (IOException e) {
+            throw new S3FileUploadFailedException();
+        }
+    }
+
+    private void imageSizeValidate(MultipartFile profilePhotoFile) {
+        if (profilePhotoFile.getSize() > 15 * 1024 * 1024) {
+            throw new ImageTooLarge();
+        }
+    }
+
+    private void imageExtensionValidate(MultipartFile profilePhotoFile) {
+        String originalFilename = profilePhotoFile.getOriginalFilename();
+        if (originalFilename == null || !originalFilename.matches("(?i)^.+\\.(jpg|png|webp)$")) {
+            throw new InvalidImageExtension();
+        }
     }
 }

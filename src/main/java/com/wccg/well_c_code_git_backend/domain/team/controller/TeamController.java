@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -156,5 +157,29 @@ public class TeamController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toUpdateTeamResponse(serviceResponse),"팀 수정 완료"));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/info-photo")
+    @Operation(
+            summary = "팀 정보 사진 파일 업로드",
+            description = """
+                    **⚠️ 본 API는 JWT 인증이 필요하며, 사용자 권한(`ROLE_USER`)이 요구됩니다.**
+                    
+                    팀의 관리자가 팀 정보 사진을 업로드하고, 업로드 가능한 파일일 경우 파일 URL을 반환 받습니다.
+                    다음의 경우 파일의 업로드가 불가능 합니다.
+                    - 확장자가 jpg, png, webp가 아닌 파일
+                    - 파일의 크기가 15MB 이상인 파일
+                    - 크기가 100*100 이 아닌 파일
+                    """,
+            security = @SecurityRequirement(name = "JWT")
+    )
+    public ResponseEntity<ApiResponse<String>> infoPhotoUpload(@RequestParam("file") MultipartFile profilePhotoFile){
+
+        String fileURL = teamService.infoPhotoUpload(profilePhotoFile);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(fileURL,"팀 정보 사진 파일 업로드 완료"));
     }
 }

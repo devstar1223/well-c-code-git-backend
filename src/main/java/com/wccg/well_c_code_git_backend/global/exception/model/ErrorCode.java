@@ -23,6 +23,7 @@ public enum ErrorCode {
     TEAM_APPLICANT_FORBIDDEN(HttpStatus.FORBIDDEN, "E204", "해당 팀의 신청 목록을 조회할 권한이 없습니다."),
     TEAM_JOIN_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "E205", "해당 팀 가입 요청을 찾을 수 없습니다."),
     TEAM_JOIN_REQUEST_INVALID_STATUS(HttpStatus.BAD_REQUEST, "E206", "가입 신청은 대기중 상태 에서만 처리할 수 있습니다."),
+    TEAM_INTRODUCE_TOO_LONG(HttpStatus.BAD_REQUEST, "E107", "팀 소개는 200자를 초과할 수 없습니다."),
 
     // E3XX : STATUS(깃허브 스탯)
 
