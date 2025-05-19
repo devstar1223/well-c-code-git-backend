@@ -16,7 +16,7 @@ import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamUsersRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.team.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

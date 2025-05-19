@@ -7,7 +7,7 @@ import com.wccg.well_c_code_git_backend.domain.branch.repository.BranchRepositor
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.AccessTokenNotFoundException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.auth.AccessTokenNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubBranchClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubBranchResponse;
 import lombok.RequiredArgsConstructor;

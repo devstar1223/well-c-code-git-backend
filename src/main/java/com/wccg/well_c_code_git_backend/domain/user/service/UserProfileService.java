@@ -8,7 +8,14 @@ import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.Service
 import com.wccg.well_c_code_git_backend.domain.user.mapper.UserDtoMapper;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.repository.UserRepository;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.ImageTooLarge;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageDimensions;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageExtension;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.S3FileUploadFailedException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.IntroduceTooLongException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.NicknameConflictException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.NicknameLengthInvalidException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.s3.S3Uploader;
 import com.wccg.well_c_code_git_backend.global.s3.UploadFileType;
 import jakarta.transaction.Transactional;

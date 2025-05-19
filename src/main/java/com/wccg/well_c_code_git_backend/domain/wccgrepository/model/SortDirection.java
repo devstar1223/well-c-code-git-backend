@@ -1,6 +1,6 @@
 package com.wccg.well_c_code_git_backend.domain.wccgrepository.model;
 
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.InvalidSortParameterException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.etc.InvalidSortParameterException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;

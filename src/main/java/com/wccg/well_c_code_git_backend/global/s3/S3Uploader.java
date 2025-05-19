@@ -1,6 +1,6 @@
 package com.wccg.well_c_code_git_backend.global.s3;
 
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.S3FileUploadFailedException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.S3FileUploadFailedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
