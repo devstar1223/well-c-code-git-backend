@@ -27,7 +27,9 @@ public enum ErrorCode {
 
     // E3XX : STATUS(깃허브 스탯)
 
-    // E4XX : POST(구인 글)
+    // E4XX : RECRUIT_POST(구인 글)
+    RECRUIT_POST_TITLE_LENGTH_INVALID(HttpStatus.BAD_REQUEST, "E401", "글 제목은 2글자 이상 50글자 이하만 가능합니다."),
+    RECRUIT_POST_CONTENT_TOO_LONG(HttpStatus.BAD_REQUEST, "E402", "글 내용은 5000자를 초과할 수 없습니다."),
 
     // E7XX : FILE(이미지, 파일)
     S3_FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E701", "S3 파일 업로드 중 오류가 발생했습니다."),
