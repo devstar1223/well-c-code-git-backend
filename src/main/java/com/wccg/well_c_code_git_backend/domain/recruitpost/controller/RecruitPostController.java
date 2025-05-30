@@ -2,7 +2,9 @@ package com.wccg.well_c_code_git_backend.domain.recruitpost.controller;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.CreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.CreateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.ReadRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.service.RecruitPostService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -13,13 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import static com.wccg.well_c_code_git_backend.domain.recruitpost.mapper.RecruitPostDtoMapper.toCreateRecruitPostResponse;
-import static com.wccg.well_c_code_git_backend.domain.recruitpost.mapper.RecruitPostDtoMapper.toServiceCreateRecruitPostRequest;
+import static com.wccg.well_c_code_git_backend.domain.recruitpost.mapper.RecruitPostDtoMapper.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,5 +43,21 @@ public class RecruitPostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toCreateRecruitPostResponse(serviceResponse),"모집 글 작성 완료"));
+    }
+
+    @GetMapping("")
+    @Operation(
+            summary = "모집 글 조회",
+            description = """
+                            팀원을 모집하는 모집 글을 조회할 수 있습니다.
+                            """
+    )
+    public ResponseEntity<ApiResponse<ReadRecruitPostResponse>> readRecruitPost(@RequestParam Long recruitPostId){
+
+        ServiceReadRecruitPostResponse serviceResponse = recruitPostService.readRecruitPost(recruitPostId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toReadRecruitPostResponse(serviceResponse),"모집 글 조회 완료"));
     }
 }

@@ -2,6 +2,7 @@ package com.wccg.well_c_code_git_backend.domain.recruitpost.service;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceCreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPost;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPostStatus;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.repository.RecruitPostRepository;
@@ -9,13 +10,14 @@ import com.wccg.well_c_code_git_backend.domain.team.model.Team;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.post.RecruitPostContentTooLongException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.post.RecruitPostNotFoundException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.post.RecruitPostTitleLengthInvalidException;
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.team.TeamNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.wccg.well_c_code_git_backend.domain.recruitpost.mapper.RecruitPostDtoMapper.toServiceCreateRecruitPostResponse;
+import static com.wccg.well_c_code_git_backend.domain.recruitpost.mapper.RecruitPostDtoMapper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +54,12 @@ public class RecruitPostService {
         newPost.setUser(user);
 
         return newPost;
+    }
+
+    public ServiceReadRecruitPostResponse readRecruitPost(Long recruitPostId) {
+        RecruitPost recruitPost = recruitPostRepository.findByIdAndIsActiveTrue(recruitPostId)
+                .orElseThrow(RecruitPostNotFoundException::new);
+
+        return toServiceReadRecruitPostResponse(recruitPost);
     }
 }
