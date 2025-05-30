@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @RequiredArgsConstructor
-public class ReadRecruitPostResponse {
+public class UpdateRecruitPostResponse {
     private final Long postId;
     private final TeamInfo teamInfo;
     private final UserInfo userInfo;

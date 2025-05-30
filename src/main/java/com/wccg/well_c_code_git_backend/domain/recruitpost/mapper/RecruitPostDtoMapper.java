@@ -1,11 +1,15 @@
 package com.wccg.well_c_code_git_backend.domain.recruitpost.mapper;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.CreateRecruitPostRequest;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.UpdateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.CreateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.ReadRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.UpdateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceCreateRecruitPostRequest;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceUpdateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceUpdateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPost;
 
 public final class RecruitPostDtoMapper {
@@ -70,21 +74,68 @@ public final class RecruitPostDtoMapper {
         return new ReadRecruitPostResponse(
                 serviceResponse.getRecruitPost().getId(),
 
-                new CreateRecruitPostResponse.TeamInfo(
+                new ReadRecruitPostResponse.TeamInfo(
                         serviceResponse.getTeam().getId(),
                         serviceResponse.getTeam().getInfoImageUrl(),
                         serviceResponse.getTeam().getName(),
                         serviceResponse.getTeam().getIntroduce()
                 ),
 
-                new CreateRecruitPostResponse.UserInfo(
+                new ReadRecruitPostResponse.UserInfo(
                         serviceResponse.getUser().getId(),
                         serviceResponse.getUser().getProfileImageUrl(),
                         serviceResponse.getUser().getNickname(),
                         serviceResponse.getUser().getIntroduce()
                 ),
 
-                new CreateRecruitPostResponse.PostInfo(
+                new ReadRecruitPostResponse.PostInfo(
+                        serviceResponse.getRecruitPost().getTitle(),
+                        serviceResponse.getRecruitPost().getContent(),
+                        serviceResponse.getRecruitPost().getRecruitPostStatus(),
+                        serviceResponse.getRecruitPost().getCreatedAt(),
+                        serviceResponse.getRecruitPost().getUpdatedAt(),
+                        serviceResponse.getRecruitPost().isActive()
+                )
+        );
+    }
+
+    public static ServiceUpdateRecruitPostRequest toServiceUpdateRecruitPostRequest(UpdateRecruitPostRequest request){
+        return new ServiceUpdateRecruitPostRequest(
+                request.getTeamId(),
+                request.getRecruitPostId(),
+                request.getTitle(),
+                request.getContent(),
+                request.getRecruitPostStatus()
+        );
+    }
+
+    public static ServiceUpdateRecruitPostResponse toServiceUpdateRecruitPostResponse(RecruitPost recruitPost){
+        return new ServiceUpdateRecruitPostResponse(
+                recruitPost,
+                recruitPost.getTeam(),
+                recruitPost.getUser()
+        );
+    }
+
+    public static UpdateRecruitPostResponse toUpdateRecruitPostResponse(ServiceUpdateRecruitPostResponse serviceResponse){
+        return new UpdateRecruitPostResponse(
+                serviceResponse.getRecruitPost().getId(),
+
+                new UpdateRecruitPostResponse.TeamInfo(
+                        serviceResponse.getTeam().getId(),
+                        serviceResponse.getTeam().getInfoImageUrl(),
+                        serviceResponse.getTeam().getName(),
+                        serviceResponse.getTeam().getIntroduce()
+                ),
+
+                new UpdateRecruitPostResponse.UserInfo(
+                        serviceResponse.getUser().getId(),
+                        serviceResponse.getUser().getProfileImageUrl(),
+                        serviceResponse.getUser().getNickname(),
+                        serviceResponse.getUser().getIntroduce()
+                ),
+
+                new UpdateRecruitPostResponse.PostInfo(
                         serviceResponse.getRecruitPost().getTitle(),
                         serviceResponse.getRecruitPost().getContent(),
                         serviceResponse.getRecruitPost().getRecruitPostStatus(),

@@ -56,4 +56,10 @@ public class RecruitPost extends BaseEntity {
                 .isActive(isActive)
                 .build();
     }
+
+    public void updateRecruitPost(String title, String content, RecruitPostStatus recruitPostStatus){
+        this.title = title;
+        this.content = content;
+        this.recruitPostStatus = recruitPostStatus;
+    }
 }

@@ -1,10 +1,13 @@
 package com.wccg.well_c_code_git_backend.domain.recruitpost.controller;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.CreateRecruitPostRequest;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.UpdateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.CreateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.ReadRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.UpdateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceUpdateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.service.RecruitPostService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -59,5 +62,24 @@ public class RecruitPostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toReadRecruitPostResponse(serviceResponse),"모집 글 조회 완료"));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("")
+    @Operation(
+            summary = "모집 글 수정",
+            description = """
+                            **⚠️ 본 API는 JWT 인증이 필요하며, 사용자 권한(`ROLE_USER`)이 요구됩니다.**
+                            - 모집 게시판에 작성된 모집 글을 수정합니다.
+                            - 본인이 작성한 글만 수정할 수 있습니다.
+                            """,
+            security = @SecurityRequirement(name = "JWT")
+    )
+    public ResponseEntity<ApiResponse<UpdateRecruitPostResponse>> updateRecruitPost(@AuthenticationPrincipal User user, @RequestBody UpdateRecruitPostRequest request){
+        ServiceUpdateRecruitPostResponse serviceResponse = recruitPostService.updateRecruitPost(user,toServiceUpdateRecruitPostRequest(request));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toUpdateRecruitPostResponse(serviceResponse),"모집 글 수정 완료"));
     }
 }
