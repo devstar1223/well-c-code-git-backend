@@ -31,7 +31,7 @@ public enum ErrorCode {
     RECRUIT_POST_TITLE_LENGTH_INVALID(HttpStatus.BAD_REQUEST, "E401", "글 제목은 2글자 이상 50글자 이하만 가능합니다."),
     RECRUIT_POST_CONTENT_TOO_LONG(HttpStatus.BAD_REQUEST, "E402", "글 내용은 5000자를 초과할 수 없습니다."),
     RECRUIT_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "E403", "해당 모집글을 찾을 수 없습니다."),
-    RECRUIT_POST_FORBIDDEN(HttpStatus.FORBIDDEN, "E404", "본인이 작성한 모집 글만 수정할 수 있습니다."),
+    RECRUIT_POST_FORBIDDEN(HttpStatus.FORBIDDEN, "E404", "본인이 작성한 모집 글만 수정 또는 삭제가 가능합니다."),
 
     // E7XX : FILE(이미지, 파일)
     S3_FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E701", "S3 파일 업로드 중 오류가 발생했습니다."),

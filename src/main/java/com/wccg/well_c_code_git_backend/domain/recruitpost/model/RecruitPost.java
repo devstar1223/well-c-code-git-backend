@@ -62,4 +62,8 @@ public class RecruitPost extends BaseEntity {
         this.content = content;
         this.recruitPostStatus = recruitPostStatus;
     }
+
+    public void deleteRecruitPost(){
+        this.isActive = false;
+    }
 }

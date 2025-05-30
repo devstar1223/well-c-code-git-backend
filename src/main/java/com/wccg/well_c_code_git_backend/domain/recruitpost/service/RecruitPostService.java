@@ -3,6 +3,7 @@ package com.wccg.well_c_code_git_backend.domain.recruitpost.service;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceCreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceUpdateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceDeleteRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceUpdateRecruitPostResponse;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPost;
@@ -57,6 +58,15 @@ public class RecruitPostService {
         recruitPostRepository.save(recruitPost);
 
         return toServiceUpdateRecruitPostResponse(recruitPost);
+    }
+
+    @Transactional
+    public ServiceDeleteRecruitPostResponse deleteRecruitPost(User user, Long recruitPostId) {
+        RecruitPost recruitPost = findRecruitPost(recruitPostId);
+        recruitPostOwnerValidate(user, recruitPost);
+        recruitPost.deleteRecruitPost();
+        recruitPostRepository.save(recruitPost);
+        return toServiceDeleteRecruitPostResponse(recruitPost);
     }
 
     private void updateRecruitPost(ServiceUpdateRecruitPostRequest serviceUpdateRecruitPostRequest, RecruitPost updatePost) {
