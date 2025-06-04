@@ -9,8 +9,8 @@ import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.RepositorySo
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.SortDirection;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.repository.WccgRepositoryRepository;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.AccessTokenNotFoundException;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.auth.AccessTokenNotFoundException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubRepositoryClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubRepositoryResponse;
 import lombok.RequiredArgsConstructor;

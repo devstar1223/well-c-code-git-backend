@@ -7,7 +7,7 @@ import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.service.UserService;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgRepositoryService;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.UserNotFoundException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

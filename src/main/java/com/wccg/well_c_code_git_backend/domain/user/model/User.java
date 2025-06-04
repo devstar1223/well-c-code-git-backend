@@ -3,6 +3,8 @@ package com.wccg.well_c_code_git_backend.domain.user.model;
 import com.wccg.well_c_code_git_backend.domain.BaseEntity;
 import com.wccg.well_c_code_git_backend.domain.accesstoken.model.AccessToken;
 import com.wccg.well_c_code_git_backend.domain.commit.model.Commit;
+import com.wccg.well_c_code_git_backend.domain.team.model.Team;
+import com.wccg.well_c_code_git_backend.domain.team.model.TeamUsers;
 import com.wccg.well_c_code_git_backend.domain.wccgrepository.model.WccgRepository;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -62,6 +64,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Commit> commits = new ArrayList<>();
 
+    @OneToMany(mappedBy = "leader", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Team> teams = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<TeamUsers> teamUsers = new ArrayList<>();
+
     @Builder
     private User(Long githubId, String githubLoginId, String name, String nickname, String introduce, String profileImageUrl, UserRole userRole, boolean isActive) {
         this.githubId = githubId;
@@ -100,6 +108,16 @@ public class User extends BaseEntity {
     public void addCommit(Commit commit) {
         commits.add(commit);
         commit.setUser(this);
+    }
+
+    public void addTeam(Team team){
+        teams.add(team);
+        team.setLeader(this);
+    }
+
+    public void addTeamUser(TeamUsers teamUser){
+        teamUsers.add(teamUser);
+        teamUser.setUser(this);
     }
 
     public void updateProfile(String nickname, String introduce, String profileImageUrl) {

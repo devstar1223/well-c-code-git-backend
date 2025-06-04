@@ -8,7 +8,14 @@ import com.wccg.well_c_code_git_backend.domain.user.dto.service.response.Service
 import com.wccg.well_c_code_git_backend.domain.user.mapper.UserDtoMapper;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.domain.user.repository.UserRepository;
-import com.wccg.well_c_code_git_backend.global.exception.exceptions.*;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.ImageTooLargeException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageDimensionsException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.InvalidImageExtensionException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.file.S3FileUploadFailedException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.IntroduceTooLongException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.NicknameConflictException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.NicknameLengthInvalidException;
+import com.wccg.well_c_code_git_backend.global.exception.exceptions.user.UserNotFoundException;
 import com.wccg.well_c_code_git_backend.global.s3.S3Uploader;
 import com.wccg.well_c_code_git_backend.global.s3.UploadFileType;
 import jakarta.transaction.Transactional;
@@ -70,7 +77,7 @@ public class UserProfileService {
         try {
             BufferedImage image = ImageIO.read(profilePhotoFile.getInputStream());
             if (image.getWidth() != 100 || image.getHeight() != 100) {
-                throw new InvalidImageDimensions();
+                throw new InvalidImageDimensionsException();
             }
         } catch (IOException e) {
             throw new S3FileUploadFailedException();
@@ -79,14 +86,14 @@ public class UserProfileService {
 
     private void imageSizeValidate(MultipartFile profilePhotoFile) {
         if (profilePhotoFile.getSize() > 15 * 1024 * 1024) {
-            throw new ImageTooLarge();
+            throw new ImageTooLargeException();
         }
     }
 
     private void imageExtensionValidate(MultipartFile profilePhotoFile) {
         String originalFilename = profilePhotoFile.getOriginalFilename();
         if (originalFilename == null || !originalFilename.matches("(?i)^.+\\.(jpg|png|webp)$")) {
-            throw new InvalidImageExtension();
+            throw new InvalidImageExtensionException();
         }
     }
 
