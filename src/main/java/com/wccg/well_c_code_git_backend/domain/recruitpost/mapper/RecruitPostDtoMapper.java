@@ -2,17 +2,14 @@ package com.wccg.well_c_code_git_backend.domain.recruitpost.mapper;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.CreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.UpdateRecruitPostRequest;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.CreateRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.DeleteRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.ReadRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.UpdateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.*;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceCreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceUpdateRecruitPostRequest;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceDeleteRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceUpdateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.*;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPost;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPostSummary;
+
+import java.util.List;
 
 public final class RecruitPostDtoMapper {
     private RecruitPostDtoMapper(){
@@ -158,6 +155,24 @@ public final class RecruitPostDtoMapper {
     public static ServiceDeleteRecruitPostResponse toServiceDeleteRecruitPostResponse(RecruitPost recruitPost){
         return new ServiceDeleteRecruitPostResponse(
                 recruitPost
+        );
+    }
+
+    public static ReadRecruitPostListResponse toReadRecruitPostListResponse(ServiceReadRecruitPostListResponse serviceResponse){
+        List<RecruitPostSummary> controllerPosts = serviceResponse.getPosts().stream()
+                .map(post -> new RecruitPostSummary(
+                        post.getRecruitPostId(),
+                        post.getTitle(),
+                        post.getAuthor(),
+                        post.getCreatedAt()
+                ))
+                .toList();
+
+        return new ReadRecruitPostListResponse(
+                serviceResponse.getTotalPages(),
+                serviceResponse.getTotalElements(),
+                serviceResponse.isHasNext(),
+                controllerPosts
         );
     }
 }

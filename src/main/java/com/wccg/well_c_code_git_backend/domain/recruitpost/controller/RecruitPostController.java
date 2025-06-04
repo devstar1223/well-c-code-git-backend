@@ -2,14 +2,8 @@ package com.wccg.well_c_code_git_backend.domain.recruitpost.controller;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.CreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.request.UpdateRecruitPostRequest;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.CreateRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.DeleteRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.ReadRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.UpdateRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceDeleteRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceUpdateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.controller.response.*;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.*;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.service.RecruitPostService;
 import com.wccg.well_c_code_git_backend.domain.user.model.User;
 import com.wccg.well_c_code_git_backend.global.dto.ApiResponse;
@@ -101,5 +95,20 @@ public class RecruitPostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.ok(toDeleteRecruitPostResponse(serviceResponse),"모집 글 삭제 완료"));
+    }
+
+    @GetMapping("/list")
+    @Operation(
+            summary = "모집 글 목록 조회",
+            description = """
+                            - 모집 게시판에서 글 목록을 조회합니다.
+                            - 최신순으로 정렬되어있으며, 페이지 단위로 조회 가능합니다.
+                            """
+    )
+    public ResponseEntity<ApiResponse<ReadRecruitPostListResponse>> readRecruitPostList(@RequestParam int page){
+        ServiceReadRecruitPostListResponse serviceResponse = recruitPostService.readRecruitPostList(page);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.ok(toReadRecruitPostListResponse(serviceResponse),"모집 글 목록 조회 완료"));
     }
 }

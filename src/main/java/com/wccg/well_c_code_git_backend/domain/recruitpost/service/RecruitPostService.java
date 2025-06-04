@@ -2,12 +2,10 @@ package com.wccg.well_c_code_git_backend.domain.recruitpost.service;
 
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceCreateRecruitPostRequest;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.request.ServiceUpdateRecruitPostRequest;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceCreateRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceDeleteRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceReadRecruitPostResponse;
-import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.ServiceUpdateRecruitPostResponse;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.dto.service.response.*;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPost;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPostStatus;
+import com.wccg.well_c_code_git_backend.domain.recruitpost.model.RecruitPostSummary;
 import com.wccg.well_c_code_git_backend.domain.recruitpost.repository.RecruitPostRepository;
 import com.wccg.well_c_code_git_backend.domain.team.model.Team;
 import com.wccg.well_c_code_git_backend.domain.team.repository.TeamRepository;
@@ -19,8 +17,13 @@ import com.wccg.well_c_code_git_backend.global.exception.exceptions.post.Recruit
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.team.TeamNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
+import java.util.List;
 import java.util.Objects;
 
 import static com.wccg.well_c_code_git_backend.domain.recruitpost.mapper.RecruitPostDtoMapper.*;
@@ -113,5 +116,29 @@ public class RecruitPostService {
         if(title.length() < 2 || title.length() > 50){
             throw new RecruitPostTitleLengthInvalidException();
         }
+    }
+
+    public ServiceReadRecruitPostListResponse readRecruitPostList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<RecruitPost> postPage = recruitPostRepository.findAllByIsActiveTrue(pageable);
+        List<RecruitPostSummary> summaries = buildRecruitPostsummary(postPage);
+        return new ServiceReadRecruitPostListResponse(
+                postPage.getTotalPages(),
+                postPage.getTotalElements(),
+                postPage.hasNext(),
+                summaries
+        );
+    }
+
+    private List<RecruitPostSummary> buildRecruitPostsummary(Page<RecruitPost> postPage) {
+        List<RecruitPostSummary> summaries = postPage.getContent().stream()
+                .map(post -> new RecruitPostSummary(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getUser().getNickname(),
+                        post.getCreatedAt()
+                ))
+                .toList();
+        return summaries;
     }
 }

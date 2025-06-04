@@ -10,7 +10,8 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {
-        @Index(columnList = "id, is_active")
+        @Index(columnList = "id, is_active"),
+        @Index(columnList = "is_active, created_at DESC")
 })
 public class RecruitPost extends BaseEntity {
     @Id
