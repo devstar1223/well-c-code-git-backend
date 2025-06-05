@@ -29,6 +29,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final ObjectMapper objectMapper;
     private final JwtProperties jwtProperties;
+    private static final List<String> STATIC_EXCLUDE_PREFIXES = List.of(
+            "/api/h2-console/",
+            "/api/swagger-ui",
+            "/api/v3/api-docs",
+            "/api/oauth"
+    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -76,14 +82,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean isExcludePath(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         String method = request.getMethod();
-
-        if (requestURI.startsWith("/api/h2-console/")) {
+        if (STATIC_EXCLUDE_PREFIXES.stream().anyMatch(requestURI::startsWith)) {
             return true;
         }
 
         if ("GET".equalsIgnoreCase(method)) {
             return jwtProperties.getExcludePaths().stream()
-                    .anyMatch(requestURI::startsWith);
+                    .anyMatch(requestURI::equals);
         }
 
         return false;
