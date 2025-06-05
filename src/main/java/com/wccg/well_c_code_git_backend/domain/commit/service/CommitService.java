@@ -12,6 +12,7 @@ import com.wccg.well_c_code_git_backend.domain.wccgrepository.service.WccgReposi
 import com.wccg.well_c_code_git_backend.global.exception.exceptions.auth.AccessTokenNotFoundException;
 import com.wccg.well_c_code_git_backend.global.github.client.GithubCommitsClient;
 import com.wccg.well_c_code_git_backend.global.github.dto.GithubCommitResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class CommitService {
     private final BranchService branchService;
     private final CommitRepository commitRepository;
 
+    @Transactional
     public ServiceSyncCommitResponse syncCommitFor(User userPrincipal) {
         Long UserId = userPrincipal.getId();
         String owner = userPrincipal.getGithubLoginId();
@@ -73,9 +75,14 @@ public class CommitService {
         return count;
     }
 
-    private static Commit getCommit(GithubCommitResponse response) {
+    private Commit getCommit(GithubCommitResponse response) {
+        String message = response.getCommit().getMessage();
+        if (message.length() > 255) {
+            message = message.substring(0, 255);
+        }
+
         return Commit.of(
-                response.getCommit().getMessage(),
+                message,
                 response.getSha(),
                 response.getCommit().getAuthor().getDate().toLocalDateTime(),
                 true);

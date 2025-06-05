@@ -20,7 +20,7 @@ public class Commit extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "message", nullable = false, length = 200)
+    @Column(name = "message", nullable = false, length = 255)
     private String message;
 
     @Column(name = "hash_value", nullable = false, length = 40)
