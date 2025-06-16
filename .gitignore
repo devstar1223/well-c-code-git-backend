@@ -38,3 +38,4 @@ out/
 
 # 개인 설정
 data/
+/src/test/java/com/wccg/well_c_code_git_backend/JasyptTest.java
