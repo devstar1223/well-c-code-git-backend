@@ -22,7 +22,7 @@ public class StatusController {
 
     private final StatusService statusService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(
             summary = "이용자 GitHub 스탯 조회",
             description = """
